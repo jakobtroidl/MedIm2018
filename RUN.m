@@ -49,19 +49,19 @@ D4 = D.data4;
 % axis on
 % axis equal
 % 
-% c2 = ourCov(D2);
+% c2 = ourCov(D2,1);
 % figure('Name','Matrix 2');
 % plot(D2(1,:), D2(2,:),'*');
 % axis on
 % axis equal
 % 
-% c3 = ourCov(D3);
+% c3 = ourCov(D3,1);
 % figure('Name','Matrix 3');
 % plot(D3(1,:), D3(2,:),'*');
 % axis on
 % axis equal
 % 
-% c4 = ourCov(D4);
+% c4 = ourCov(D4,1);
 % figure('Name','Matrix 4');
 % plot(D4(1,:), D4(2,:),'*');
 % axis on
@@ -118,6 +118,7 @@ D4 = D.data4;
 
 % (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
 % Berechnung? (1 Punkt)
+% Eigenvektoren werden auf Nullpunkt verschoben
 % disp('2d pca D1 ')
 % D1trans = transpose(D1);
 % dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
@@ -136,13 +137,51 @@ D4 = D.data4;
 % plot2DPCA.m. Beschreiben Sie den Eekt von Projektion und Rekonstruktion
 % auf die Datenpunkte. Wie gro ist der Durchschnittliche Fehler
 % zwischen Rekonstruktion und Originaldaten? (3 Punkte)
+[eVal3,eVec3]=pca(D3,1);
+meanD3=mean(transpose(D3));
+
+D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
+D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))];
+D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
+
+disp('2d pca D3_hv ')
+plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
+
+%Durchschnittlicher Fehler
 
 
+D3_hv_diff = D3-D3_hv_shift;
+for i=1:size(D3,2)
+   D3_hv_distance(i)=norm(D3_hv_diff(:,i)); 
+end
+D3_hv_err_hv = mean(transpose(D3_hv_distance))
 
 % (b) Machen Sie die selbe Untersuchung, nur mit dem Nebenvektor. Welche
 % Eigenvektoren werden Sie verwenden, um eine Datenmatrix mit
 % moglichst wenig Fehler mit moglichst wenig Eigenvektoren (in diesem
 % Fall 1) darzustellen? (1 Punkt)
+[eVal3,eVec3]=pca(D3,1);
+meanD3=mean(transpose(D3));
+
+D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
+D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)];
+D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
+
+disp('2d pca D3_nv ')
+plot2DPCA(transpose(D3), meanD3, transpose(D3_nv_shift), eVec3, eVal3, 1, 1);
+
+%Durchschnittlicher Fehler
+
+D3_nv_diff = D3-D3_nv_shift;
+for i=1:size(D3,2)
+   D3_nv_distance(i)=norm(D3_nv_diff(:,i)); 
+end
+D3_nv_distance;
+D3_nv_err_nv = mean(transpose(D3_nv_distance))
 
 
 
