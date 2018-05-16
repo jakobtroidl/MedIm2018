@@ -1,4 +1,3 @@
-% 2 Angabe
 % Das erste Beispiel dient einerseits dem Vertrautwerden mit Matlab und andererseits
 % dazu, das Verstandis der PCA (Principal Component Analysis) zu vertiefen.
 % Ziel des Beispiels ist die Implementierung einer PCA (Principal Component
@@ -186,19 +185,29 @@ D3_nv_err_nv = mean(transpose(D3_nv_distance))
 
 
 % 4. Untersuchungen in 3D
-% (a) Berechnen Sie die PCA und plotten Sie Daten und Eigenvektoren fur
+% (a) Berechnen Sie die PCA und plotten Sie Daten und Eigenvektoren fuer
 % die Daten in daten3d.mat. Beschreiben Sie die Relation von Kovarianzmatrix
 % (Varianzen), Eigenwerten und -vektoren und den Ellipsoiden
 % der Standardabweichungen. (2 Punkt)
 
-
+D3D=load('daten3d.mat');
+D3D=D3D.data;
+meanD3D=mean(transpose(D3D));
+[eValD3D,eVecD3D]=pca(D3D,1);
+plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0)
 
 % (b) Projiziieren Sie auf den Unterraum, der durch die ersten beiden Eigenvektoren
 % aufgespannt wird. Welche Dimension haben Ihre Daten?
 % Rekonstruieren Sie die Punkte im Originalraum und plotten Sie das
 % Ergebnis. Welche Information ist verloren gegangen? (1 Punkt)
 
+D3D_zent =  D3D-repmat(transpose(meanD3D),1,size(D3D,2)); %zentrieren
+D3D_rot  =  transpose(eVecD3D)*D3D_zent; % Rotation, sodass die Eigenvektoren die X, Y und Z Achse sind
+D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))];
+D3D_rec  =  eVecD3D*D3D_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3D_shift =  D3D_rec+repmat(transpose(meanD3D),1,size(D3D,2)); %rezentrieren
 
+plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
 
 % 5. Shape Modell
 % (a) Berechnen Sie die PCA der Shape Daten in shape.mat { die Matrix
@@ -223,7 +232,3 @@ D3_nv_err_nv = mean(transpose(D3_nv_distance))
 % dementsprechend die Lange von b, plotten Sie die resultierenden Shapes
 % und interpretieren Sie. Beschranken Sie so, dass das Shape Modell
 % 100%, 95%, 90% und 80% der Gesamtvarianz beinhaltet.(4 Punkt)
-
-
-
-
