@@ -36,34 +36,34 @@
 % equal. Interpretieren Sie die unterschiedlichen C zwischen den Datensets!
 % Welche Informationen stehen an welcher Stelle von C? (2 Punkte)
 
-data = load('daten.mat');
+D = load('daten.mat');
 
-mat1 = data.data1;
-mat2 = data.data2;
-mat3 = data.data3;
-mat4 = data.data4;
+D1 = D.data1;
+D2 = D.data2;
+D3 = D.data3;
+D4 = D.data4;
 
-c1 = ourCov(mat1);
+c1 = ourCov(D1);
 figure('Name','Matrix 1');
-plot(mat1(1,:), mat1(2,:),'*');
+plot(D1(1,:), D1(2,:),'*');
 axis on
 axis equal
 
-c2 = ourCov(mat2);
+c2 = ourCov(D2);
 figure('Name','Matrix 2');
-plot(mat2(1,:), mat2(2,:),'*');
+plot(D2(1,:), D2(2,:),'*');
 axis on
 axis equal
 
-c3 = ourCov(mat3);
+c3 = ourCov(D3);
 figure('Name','Matrix 3');
-plot(mat3(1,:), mat3(2,:),'*');
+plot(D3(1,:), D3(2,:),'*');
 axis on
 axis equal
 
-c4 = ourCov(mat4);
+c4 = ourCov(D4);
 figure('Name','Matrix 4');
-plot(mat4(1,:), mat4(2,:),'*');
+plot(D4(1,:), D4(2,:),'*');
 axis on
 axis equal
 
@@ -77,13 +77,35 @@ axis equal
 
 % -> pca.m
 
-[eva,eve]=pca(D);
+[eVal1,eVec1]=pca(D1);
+[eVal2,eVec2]=pca(D2);
+[eVal3,eVec3]=pca(D3);
+[eVal4,eVec4]=pca(D4);
+
 
 % (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
 % ( 1 Punkt)
 
-% LÖSCHEN!!!!!!!!... 4x 2-dim Vektoren? mit 50 einträgen....
 
+disp('2d pca D1 ')
+D1trans = transpose(D1);
+dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+
+disp('2d pca D2 ')
+D2trans = transpose(D2);
+dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
+plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
+
+disp('2d pca D3 ')
+D3trans = transpose(D3);
+dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
+plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
+
+disp('2d pca D4 ')
+D4trans = transpose(D4);
+dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
+plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
 
 % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
 % Punkt)

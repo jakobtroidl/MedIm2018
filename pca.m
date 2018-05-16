@@ -1,9 +1,10 @@
-function [ evaldesc,evecdesc ] = pca( matrix )
+function [ evaldesc,evecdescnorm ] = pca( matrix )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 C=ourCov(matrix);
 [evec,eval]=eig(C);
 [evaldesc,id]=sort(diag(eval),'descend');
 evecdesc=evec(:,id);
+evecdescnorm = evecdesc./repmat(sqrt(sum(evecdesc.^2)),[size(evecdesc,1) ones(1,ndims(evecdesc)-1)]);
 end
 
