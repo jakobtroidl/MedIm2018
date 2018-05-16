@@ -1,3 +1,4 @@
+%author: oliver
 function [ ausgabe ] = ourCov( matrix )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
