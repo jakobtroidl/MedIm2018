@@ -1,10 +1,10 @@
 %author: oliver
-function [ ausgabe ] = ourCov( matrix )
+function [ ausgabe ] = ourCov( matrix, withMean )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     med=mean(transpose(matrix));
     rep = repmat(transpose(med),1,size(matrix,2));
-    matomed=matrix-rep;
+    matomed=matrix-withMean.*rep;
     
     for i=1:size(matomed,1)
        for j=i:size(matomed,1)

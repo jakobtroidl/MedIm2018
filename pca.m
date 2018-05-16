@@ -1,7 +1,7 @@
-function [ evaldesc,evecdescnorm ] = pca( matrix )
+function [ evaldesc,evecdescnorm ] = pca( matrix, withMean )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-C=ourCov(matrix);
+C=ourCov(matrix,withMean);
 [evec,eval]=eig(C);
 [evaldesc,id]=sort(diag(eval),'descend');
 evecdesc=evec(:,id);

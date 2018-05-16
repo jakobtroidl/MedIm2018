@@ -43,29 +43,29 @@ D2 = D.data2;
 D3 = D.data3;
 D4 = D.data4;
 
-c1 = ourCov(D1);
-figure('Name','Matrix 1');
-plot(D1(1,:), D1(2,:),'*');
-axis on
-axis equal
-
-c2 = ourCov(D2);
-figure('Name','Matrix 2');
-plot(D2(1,:), D2(2,:),'*');
-axis on
-axis equal
-
-c3 = ourCov(D3);
-figure('Name','Matrix 3');
-plot(D3(1,:), D3(2,:),'*');
-axis on
-axis equal
-
-c4 = ourCov(D4);
-figure('Name','Matrix 4');
-plot(D4(1,:), D4(2,:),'*');
-axis on
-axis equal
+%c1 = ourCov(D1,1);
+% figure('Name','Matrix 1');
+% plot(D1(1,:), D1(2,:),'*');
+% axis on
+% axis equal
+% 
+% c2 = ourCov(D2);
+% figure('Name','Matrix 2');
+% plot(D2(1,:), D2(2,:),'*');
+% axis on
+% axis equal
+% 
+% c3 = ourCov(D3);
+% figure('Name','Matrix 3');
+% plot(D3(1,:), D3(2,:),'*');
+% axis on
+% axis equal
+% 
+% c4 = ourCov(D4);
+% figure('Name','Matrix 4');
+% plot(D4(1,:), D4(2,:),'*');
+% axis on
+% axis equal
 
 
 
@@ -77,35 +77,34 @@ axis equal
 
 % -> pca.m
 
-[eVal1,eVec1]=pca(D1);
-[eVal2,eVec2]=pca(D2);
-[eVal3,eVec3]=pca(D3);
-[eVal4,eVec4]=pca(D4);
+[eVal1,eVec1]=pca(D1,1);
+[eVal2,eVec2]=pca(D2,1);
+[eVal3,eVec3]=pca(D3,1);
+[eVal4,eVec4]=pca(D4,1);
 
 
 % (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
 % ( 1 Punkt)
 
+% disp('2d pca D1 ')
+% D1trans = transpose(D1);
+% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
 
-disp('2d pca D1 ')
-D1trans = transpose(D1);
-dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+% disp('2d pca D2 ')
+% D2trans = transpose(D2);
+% dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
+% plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
 
-disp('2d pca D2 ')
-D2trans = transpose(D2);
-dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
-plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
-
-disp('2d pca D3 ')
-D3trans = transpose(D3);
-dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
-plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
-
-disp('2d pca D4 ')
-D4trans = transpose(D4);
-dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
-plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
+% disp('2d pca D3 ')
+% D3trans = transpose(D3);
+% dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
+% plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
+% 
+% disp('2d pca D4 ')
+% D4trans = transpose(D4);
+% dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
+% plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
 
 % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
 % Punkt)
@@ -119,8 +118,16 @@ plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
 
 % (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
 % Berechnung? (1 Punkt)
-
-
+% disp('2d pca D1 ')
+% D1trans = transpose(D1);
+% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+% 
+% [eVal1_0,eVec1_0]=pca(D1,0);
+% disp('2d pca D1 ')
+% D1trans = transpose(D1);
+% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1_0, eVal1_0, 1, 1);
 
 % 3. Unterraum-Projektion
 % (a) Berechnen Sie die PCA fur data3. Projiziieren Sie die Daten in data3
