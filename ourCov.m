@@ -3,7 +3,8 @@ function [ ausgabe ] = ourCov( matrix )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     med=mean(transpose(matrix));
-    matomed=matrix-transpose(med);
+    rep = repmat(transpose(med),1,size(matrix,2));
+    matomed=matrix-rep;
     
     for i=1:size(matomed,1)
        for j=i:size(matomed,1)

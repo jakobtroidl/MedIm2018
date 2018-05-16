@@ -36,24 +36,38 @@
 % equal. Interpretieren Sie die unterschiedlichen C zwischen den Datensets!
 % Welche Informationen stehen an welcher Stelle von C? (2 Punkte)
 
-%LÖSCHEN was sind die 4 Arrays mit je 2x50 matrizen?
-% LÖSCHEN!!!!!!!!!!!!!!!!!!!... 4x 2-dim Vektoren? mit 50 einträgen....
+data = load('daten.mat');
 
-daten=load('daten.mat');
-D=cell2mat(struct2cell(daten)); %Dim: d x n (8x50)
-C=ourCov(D); %mit dxn
-% LÖSCHEN cov(transpose(D)) %mit nxd
+mat1 = data.data1;
+mat2 = data.data2;
+mat3 = data.data3;
+mat4 = data.data4;
 
-%LÖSCHEN wie ploten??
-figure
-subplot(1,2,1)
-plot(transpose(D))
-
-subplot(1,2,2)
-plot(C)
-
+c1 = ourCov(mat1);
+figure('Name','Matrix 1');
+plot(mat1(1,:), mat1(2,:),'*');
 axis on
 axis equal
+
+c2 = ourCov(mat2);
+figure('Name','Matrix 2');
+plot(mat2(1,:), mat2(2,:),'*');
+axis on
+axis equal
+
+c3 = ourCov(mat3);
+figure('Name','Matrix 3');
+plot(mat3(1,:), mat3(2,:),'*');
+axis on
+axis equal
+
+c4 = ourCov(mat4);
+figure('Name','Matrix 4');
+plot(mat4(1,:), mat4(2,:),'*');
+axis on
+axis equal
+
+
 
 % 2. PCA { Schreiben Sie eine Funktion pca.m, die die PCA fuer D berechnet. Die
 % Berechnung soll unabhaengig von der Dimension der Daten sein. Ergebnis sind
@@ -90,7 +104,7 @@ axis equal
 % (a) Berechnen Sie die PCA fur data3. Projiziieren Sie die Daten in data3
 % auf den Hauptvektor (Plot). Welche Dimension haben Ihre Daten jetzt?
 % Rekonstruieren Sie die Projektion und plotten Sie das Ergebnis mittels
-% plot2DPCA.m. Beschreiben Sie den Eekt von Projektion und Rekonstruktion
+% plot2DPCA.m. Beschreiben Sie den Eekt von Projektion und Rekonstruktion
 % auf die Datenpunkte. Wie gro ist der Durchschnittliche Fehler
 % zwischen Rekonstruktion und Originaldaten? (3 Punkte)
 
