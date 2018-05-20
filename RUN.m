@@ -210,11 +210,15 @@ D3D_shift =  D3D_rec+repmat(transpose(meanD3D),1,size(D3D,2)); %rezentrieren
 plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
 
 % 5. Shape Modell
-% (a) Berechnen Sie die PCA der Shape Daten in shape.mat { die Matrix
+% (a) Berechnen Sie die PCA der Shape Daten in shape.mat die Matrix
 % aligned hat die Dimensionen nPunkte x nDimensionen x nShapes.
 % Schreiben Sie eine Funktion generateShape, die zu einem Parametervektor
 % b mit einer Lange entsprechend der Zahl der Eigenvektoren neue
 % Shapes generieren kann.(4 Punkt)
+shapes = load('shapes.mat');
+shapes = shapes.aligned;
+
+shapes = shapes;
 
 
 
