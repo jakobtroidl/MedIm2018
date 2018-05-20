@@ -42,29 +42,29 @@ D2 = D.data2;
 D3 = D.data3;
 D4 = D.data4;
 
-%c1 = ourCov(D1,1);
-% figure('Name','Matrix 1');
-% plot(D1(1,:), D1(2,:),'*');
-% axis on
-% axis equal
-% 
-% c2 = ourCov(D2,1);
-% figure('Name','Matrix 2');
-% plot(D2(1,:), D2(2,:),'*');
-% axis on
-% axis equal
-% 
-% c3 = ourCov(D3,1);
-% figure('Name','Matrix 3');
-% plot(D3(1,:), D3(2,:),'*');
-% axis on
-% axis equal
-% 
-% c4 = ourCov(D4,1);
-% figure('Name','Matrix 4');
-% plot(D4(1,:), D4(2,:),'*');
-% axis on
-% axis equal
+c1 = ourCov(D1,1);
+figure('Name','Matrix 1');
+plot(D1(1,:), D1(2,:),'*');
+axis on
+axis equal
+
+c2 = ourCov(D2,1);
+figure('Name','Matrix 2');
+plot(D2(1,:), D2(2,:),'*');
+axis on
+axis equal
+
+c3 = ourCov(D3,1);
+figure('Name','Matrix 3');
+plot(D3(1,:), D3(2,:),'*');
+axis on
+axis equal
+
+c4 = ourCov(D4,1);
+figure('Name','Matrix 4');
+plot(D4(1,:), D4(2,:),'*');
+axis on
+axis equal
 
 
 
@@ -218,7 +218,12 @@ plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
 shapes = load('shapes.mat');
 shapes = shapes.aligned;
 
-shapes = shapes;
+for i = 1 : size(shapes,1)
+    point = shapes(i,:,:);
+    C = permute(point,[1 3 2])
+    C = reshape(C,[],size(point,2),1)
+    C = C.'
+end
 
 
 
