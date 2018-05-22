@@ -1,10 +1,7 @@
 function [ evaldesc,evecdescnorm ] = pca( matrix, withMean )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
-C=ourCov(matrix,withMean); %calculation of covariance matrix
-[evec,eval]=eig(C); %eigenvectors and eigenvalues
-[evaldesc,id]=sort(diag(eval),'descend');
-evecdesc=evec(:,id);
-evecdescnorm = evecdesc./repmat(sqrt(sum(evecdesc.^2)),[size(evecdesc,1) ones(1,ndims(evecdesc)-1)]);
+C=ourCov(matrix,withMean); %Varianz Kovarianz Matrix berechnen
+[evec,eval]=eig(C); %Eigenvektor und Eigenwerte der Varianz Kovarianz Matrix berechnen
+[evaldesc,id]=sort(diag(eval),'descend'); %Eigenwerte absteigend sortieren und Sortierung in id speichern
+evecdesc=evec(:,id); %Eigenvekoteren mit der Sortierung der Eigenwerte umsortieren
+evecdescnorm = evecdesc./repmat(sqrt(sum(evecdesc.^2)),[size(evecdesc,1) ones(1,ndims(evecdesc)-1)]); %Eigenvektoren normieren
 end
-
