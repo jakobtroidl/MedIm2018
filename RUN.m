@@ -215,29 +215,96 @@ plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
 % Schreiben Sie eine Funktion generateShape, die zu einem Parametervektor
 % b mit einer Lange entsprechend der Zahl der Eigenvektoren neue
 % Shapes generieren kann.(4 Punkt)
-shapes = load('shapes.mat');
-shapes = shapes.aligned;
 
-for i = 1 : size(shapes,1)
-    point = shapes(i,:,:);
-    C = permute(point,[1 3 2])
-    C = reshape(C,[],size(point,2),1)
-    C = C.'
+shapes = load('shapes.mat'); %Daten laden
+shapes = shapes.aligned; %aligned auswaehlen
+
+%%von Jakob:
+%%for i = 1 : size(shapes,1)
+%%    point = shapes(i,:,:);
+%%    C = permute(point,[1 3 2])
+%%    C = reshape(C,[],size(point,2),1)
+%%    C = C.'
+%%end
+
+
+%3dim Matrix in 2dim Matrix speichern: ([x(1 1);y(1 1);x(2 1);y(2
+%1);...],...,[x(1 14);...])
+for i=1:14
+    for j=1:128
+        shapesmat(j*2,i)=shapes(j,2,i);
+        shapesmat(j*2-1,i)=shapes(j,1,i);
+    end
 end
 
+%LÖSCHEN shapes normieren, bzw verzerrung entfernen??
+shapesmean=mean(shapesmat'); %mean aller Punkte
+shapesmatwom=shapesmat-shapesmean'; %shapes without mean
+[shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
 
+% -> generateShape
 
+%10Bsp mit random vector (blau) + mean shape (rot):
+plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
+hold on
+numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
+for i=1:10
+    bnew=round(randn(numposeVal,1)*10);
+    xnew=generateShape(bnew,shapeseVec,shapesmean);
+    plot([xnew(1:2:256);xnew(1)],[xnew(2:2:256);xnew(2)],'b')
+end
+    
 % (b) Schreiben Sie eine Funktion plotShape, die die Shapes in blau darstellt
 % und plotten und interpretieren Sie die Einzelnen Modes (d.h. b ist 0
-% bis auf einen Wert) im Bereich von 3, wobei  die Standardabweichung
+% bis auf einen Wert) im Bereich von +/-3 lambda, wobei lambda die Standardabweichung
 % des entprechenden Modes bezeichnet. Die Funktion soll gleichzeitig
 % auch das mean shape (d.h. b gleich dem Nullvektor) in rot darstellen.
 % Beschreiben und interpretieren Sie. (4 Punkt)
 
+%LÖSCHEN "Shapes in blau darstellt" -> alle shapes in grunddaten darstellen? (14
+%stück)??
+plotShape(shapeseVal,shapeseVec,shapesmean);
 
-
-% (c) Setzen Sie nun b=randn(1,nEigenvectors).*stddeviations. Beschranken
+% (c) Setzen Sie nun b=randn(1,nEigenvectors).*stddeviations. Beschraenken
 % Sie nun wie in den 2D und 3D Beispielen die Zahl der Eigenvektoren,
-% dementsprechend die Lange von b, plotten Sie die resultierenden Shapes
-% und interpretieren Sie. Beschranken Sie so, dass das Shape Modell
+% dementsprechend die Laenge von b, plotten Sie die resultierenden Shapes
+% und interpretieren Sie. Beschraenken Sie so, dass das Shape Modell
 % 100%, 95%, 90% und 80% der Gesamtvarianz beinhaltet.(4 Punkt)
+
+antgesamtvar=shapeseVal(1:numposeVal)/sum(shapeseVal(1:numposeVal)); %Anteil der Gesamtvarianz
+kumgesamtvar=cumsum(antgesamtvar); %kumulierte Gesamtvarianz
+
+
+%Shape Modell mit 100% der Gesamtvarianz
+nEigenvectors=numposeVal;%Gesamtvarianz entspricht der Anzahl aller positiven Eigenwerte
+stddeviations=sqrt(shapeseVal(1:nEigenvectors))'; %Varianz=Stdabw.^2
+b100=randn(1,nEigenvectors).*stddeviations;
+shapenew100=generateShape(b100',shapeseVec,shapesmean);
+
+%Shape Modell mit 95% der Gesamtvarianz
+nEigenvectors=5;%kumgesamtvar(5)=0.9633
+stddeviations=sqrt(shapeseVal(1:nEigenvectors))'; %Varianz=Stdabw.^2
+b95=randn(1,nEigenvectors).*stddeviations;
+shapenew95=generateShape(b95',shapeseVec,shapesmean);
+
+%Shape Modell mit 90% der Gesamtvarianz
+nEigenvectors=3;%kumgesamtvar(3)=0.9058
+stddeviations=sqrt(shapeseVal(1:nEigenvectors))'; %Varianz=Stdabw.^2
+b90=randn(1,nEigenvectors).*stddeviations;
+shapenew90=generateShape(b90',shapeseVec,shapesmean);
+
+%Shape Modell mit 80% der Gesamtvarianz
+nEigenvectors=2;%kumgesamtvar(2)=0.7928
+stddeviations=sqrt(shapeseVal(1:nEigenvectors))'; %Varianz=Stdabw.^2
+b80=randn(1,nEigenvectors).*stddeviations;
+shapenew80=generateShape(b80',shapeseVec,shapesmean);
+
+%Alles ploten:
+plot([shapenew80(1:2:256);shapenew80(1)],[shapenew80(2:2:256);shapenew80(2)])
+hold on
+plot([shapenew90(1:2:256);shapenew90(1)],[shapenew90(2:2:256);shapenew90(2)])
+plot([shapenew95(1:2:256);shapenew95(1)],[shapenew95(2:2:256);shapenew95(2)])
+plot([shapenew100(1:2:256);shapenew100(1)],[shapenew100(2:2:256);shapenew100(2)])
+plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)])
+hold off
+legend({'80% of Totvar','90% of Totvar','95% of Totvar','100% of Totvar','MeanShape'})
