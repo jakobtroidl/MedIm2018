@@ -41,31 +41,35 @@ D1 = D.data1;
 D2 = D.data2;
 D3 = D.data3;
 D4 = D.data4;
-
-c1 = ourCov(D1,1);
-figure('Name','Matrix 1');
-plot(D1(1,:), D1(2,:),'*');
-axis on
-axis equal
-
-c2 = ourCov(D2,1);
-figure('Name','Matrix 2');
-plot(D2(1,:), D2(2,:),'*');
-axis on
-axis equal
-
-c3 = ourCov(D3,1);
-figure('Name','Matrix 3');
-plot(D3(1,:), D3(2,:),'*');
-axis on
-axis equal
-
-c4 = ourCov(D4,1);
-figure('Name','Matrix 4');
-plot(D4(1,:), D4(2,:),'*');
-axis on
-axis equal
-
+%
+% c1 = ourCov(D1,1)
+% figure();
+% plot(D1(1,:), D1(2,:),'*');
+% title('1b - Data 1 Plot');
+% axis on
+% axis equal
+%
+% c2 = ourCov(D2,1)
+% figure();
+% plot(D2(1,:), D2(2,:),'*');
+% title('1b - Data 2 Plot');
+% axis on
+% axis equal
+%
+% c3 = ourCov(D3,1)
+% figure();
+% plot(D3(1,:), D3(2,:),'*');
+% title('1b - Data 3 Plot');
+% axis on
+% axis equal
+%
+% c4 = ourCov(D4,1)
+% figure();
+% plot(D4(1,:), D4(2,:),'*');
+% title('1b - Data 4 Plot');
+% axis on
+% axis equal
+%
 
 
 % 2. PCA { Schreiben Sie eine Funktion pca.m, die die PCA fuer D berechnet. Die
@@ -85,39 +89,43 @@ axis equal
 % (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
 % ( 1 Punkt)
 
-disp('2d pca D1 ')
-D1trans = transpose(D1);
-dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
-
-disp('2d pca D2 ')
-D2trans = transpose(D2);
-dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
-plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
-
-disp('2d pca D3 ')
-D3trans = transpose(D3);
-dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
-plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
-
-disp('2d pca D4 ')
-D4trans = transpose(D4);
-dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
-plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
-
-% (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
-% Punkt)
-
-
-
-% (c) Was geben die Eigenwerte an? Wo sieht man das im Plot? In welcher
-% Relation stehen sie zur Gesamtvarianz? (1.5 Punkte)
-
-
-
-% (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
-% Berechnung? (1 Punkt)
-% Eigenvektoren werden auf Nullpunkt verschoben
+%  disp('2d pca D1 ')
+%  D1trans = transpose(D1);
+%  dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+%  plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+%  title('2a - Data 1 2D PCA Plot');
+%
+% disp('2d pca D2 ')
+% D2trans = transpose(D2);
+% dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
+% plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
+% title('2a - Data 2 2D PCA Plot');
+%
+% disp('2d pca D3 ')
+% D3trans = transpose(D3);
+% dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
+% plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
+% title('2a - Data 3 2D PCA Plot');
+%
+% disp('2d pca D4 ')
+% D4trans = transpose(D4);
+% dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
+% plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
+% title('2a - Data 4 2D PCA Plot');
+%
+% % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
+% % Punkt)
+%
+%
+%
+% % (c) Was geben die Eigenwerte an? Wo sieht man das im Plot? In welcher
+% % Relation stehen sie zur Gesamtvarianz? (1.5 Punkte)
+%
+%
+%
+% % (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
+% % Berechnung? (1 Punkt)
+% %Eigenvektoren werden auf Nullpunkt verschoben
 % disp('2d pca D1 ')
 % D1trans = transpose(D1);
 % dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
@@ -136,51 +144,52 @@ plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
 % plot2DPCA.m. Beschreiben Sie den Eekt von Projektion und Rekonstruktion
 % auf die Datenpunkte. Wie gro ist der Durchschnittliche Fehler
 % zwischen Rekonstruktion und Originaldaten? (3 Punkte)
-[eVal3,eVec3]=pca(D3,1);
-meanD3=mean(transpose(D3));
-
-D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
-D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse)
-D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis (Rekonstruktion)
-D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
-
-disp('2d pca D3_hv ')
-plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
-
-%Durchschnittlicher Fehler (Durchschnittlicher wert der Abstände zwischen originalen Datenpunkten und
-%rekonstruierten Datenpunkten)
-
-D3_hv_diff = D3-D3_hv_shift;
-for i=1:size(D3,2)
-   D3_hv_distance(i)=norm(D3_hv_diff(:,i)); 
-end
-D3_hv_err_hv = mean(transpose(D3_hv_distance))
-
-% (b) Machen Sie die selbe Untersuchung, nur mit dem Nebenvektor. Welche
-% Eigenvektoren werden Sie verwenden, um eine Datenmatrix mit
-% moglichst wenig Fehler mit moglichst wenig Eigenvektoren (in diesem
-% Fall 1) darzustellen? (1 Punkt)
-[eVal3,eVec3]=pca(D3,1);
-meanD3=mean(transpose(D3));
-
-D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
-D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)]; %x-Koordinate auf 0 gesetzt, y Koordinaten bleiben gleich (Projektion auf y Achse)
-D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
-D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
-
-disp('2d pca D3_nv ')
-plot2DPCA(transpose(D3), meanD3, transpose(D3_nv_shift), eVec3, eVal3, 1, 1);
-
-%Durchschnittlicher Fehler
-
-D3_nv_diff = D3-D3_nv_shift;
-for i=1:size(D3,2)
-   D3_nv_distance(i)=norm(D3_nv_diff(:,i)); 
-end
-D3_nv_distance;
-D3_nv_err_nv = mean(transpose(D3_nv_distance))
+% [eVal3,eVec3]=pca(D3,1);
+% meanD3=mean(transpose(D3));
+% D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
+% D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+% D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse)
+% D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+% D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
+%
+% disp('2d pca D3_hv ')
+% plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
+% title('3a - Projektion Hauptvektor');
+%
+% %Durchschnittlicher Fehler
+%
+%
+% D3_hv_diff = D3-D3_hv_shift;
+% for i=1:size(D3,2)
+%    D3_hv_distance(i)=norm(D3_hv_diff(:,i));
+% end
+% D3_hv_err_hv = mean(transpose(D3_hv_distance))
+%
+% % (b) Machen Sie die selbe Untersuchung, nur mit dem Nebenvektor. Welche
+% % Eigenvektoren werden Sie verwenden, um eine Datenmatrix mit
+% % moglichst wenig Fehler mit moglichst wenig Eigenvektoren (in diesem
+% % Fall 1) darzustellen? (1 Punkt)
+% [eVal3,eVec3]=pca(D3,1);
+% meanD3=mean(transpose(D3));
+%
+% D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
+% D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+% D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)]; %x-Koordinate auf 0 gesetzt, y Koordinaten bleiben gleich (Projektion auf y Achse)
+% D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+% D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
+%
+% disp('2d pca D3_nv ')
+% plot2DPCA(transpose(D3), meanD3, transpose(D3_nv_shift), eVec3, eVal3, 1, 1);
+% title('3a - Projektion Nebenvektor');
+%
+% %Durchschnittlicher Fehler
+%
+% D3_nv_diff = D3-D3_nv_shift;
+% for i=1:size(D3,2)
+%    D3_nv_distance(i)=norm(D3_nv_diff(:,i));
+% end
+% D3_nv_distance;
+% D3_nv_err_nv = mean(transpose(D3_nv_distance))
 
 
 
