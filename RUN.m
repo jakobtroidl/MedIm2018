@@ -85,25 +85,25 @@ axis equal
 % (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
 % ( 1 Punkt)
 
-% disp('2d pca D1 ')
-% D1trans = transpose(D1);
-% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+disp('2d pca D1 ')
+D1trans = transpose(D1);
+dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
 
-% disp('2d pca D2 ')
-% D2trans = transpose(D2);
-% dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
-% plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
+disp('2d pca D2 ')
+D2trans = transpose(D2);
+dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
+plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
 
-% disp('2d pca D3 ')
-% D3trans = transpose(D3);
-% dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
-% plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
-% 
-% disp('2d pca D4 ')
-% D4trans = transpose(D4);
-% dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
-% plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
+disp('2d pca D3 ')
+D3trans = transpose(D3);
+dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
+plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
+
+disp('2d pca D4 ')
+D4trans = transpose(D4);
+dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
+plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
 
 % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
 % Punkt)
@@ -141,15 +141,15 @@ meanD3=mean(transpose(D3));
 
 D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
 D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))];
-D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse)
+D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis (Rekonstruktion)
 D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
 
 disp('2d pca D3_hv ')
 plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
 
-%Durchschnittlicher Fehler
-
+%Durchschnittlicher Fehler (Durchschnittlicher wert der Abstände zwischen originalen Datenpunkten und
+%rekonstruierten Datenpunkten)
 
 D3_hv_diff = D3-D3_hv_shift;
 for i=1:size(D3,2)
@@ -166,7 +166,7 @@ meanD3=mean(transpose(D3));
 
 D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
 D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)];
+D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)]; %x-Koordinate auf 0 gesetzt, y Koordinaten bleiben gleich (Projektion auf y Achse)
 D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
 D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
 
@@ -194,7 +194,8 @@ D3D=load('daten3d.mat');
 D3D=D3D.data;
 meanD3D=mean(transpose(D3D));
 [eValD3D,eVecD3D]=pca(D3D,1);
-plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0)
+plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0);
+title ('4a - 3D Daten Plot')
 
 % (b) Projiziieren Sie auf den Unterraum, der durch die ersten beiden Eigenvektoren
 % aufgespannt wird. Welche Dimension haben Ihre Daten?
@@ -203,12 +204,12 @@ plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0)
 
 D3D_zent =  D3D-repmat(transpose(meanD3D),1,size(D3D,2)); %zentrieren
 D3D_rot  =  transpose(eVecD3D)*D3D_zent; % Rotation, sodass die Eigenvektoren die X, Y und Z Achse sind
-D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))];
+D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten bleiben gleich, z-koordinate auf 0 gesetzt (Projektion auf z Achse)
 D3D_rec  =  eVecD3D*D3D_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
 D3D_shift =  D3D_rec+repmat(transpose(meanD3D),1,size(D3D,2)); %rezentrieren
 
 plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
-
+title ('4b - 3D Projektion')
 % 5. Shape Modell
 % (a) Berechnen Sie die PCA der Shape Daten in shape.mat die Matrix
 % aligned hat die Dimensionen nPunkte x nDimensionen x nShapes.
