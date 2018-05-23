@@ -220,11 +220,11 @@ shapes = load('shapes.mat'); %Daten laden
 shapes = shapes.aligned; %aligned auswaehlen
 
 %%von Jakob:
-%%for i = 1 : size(shapes,1)
-%%    point = shapes(i,:,:);
-%%    C = permute(point,[1 3 2])
-%%    C = reshape(C,[],size(point,2),1)
-%%    C = C.'
+%for i = 1 : size(shapes,1)
+%    point = shapes(i,:,:);
+%    C = permute(point,[1 3 2])
+%    C = reshape(C,[],size(point,2),1)
+%    C = C.'
 %%end
 
 
