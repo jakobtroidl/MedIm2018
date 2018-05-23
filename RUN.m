@@ -203,6 +203,7 @@ D3D=load('daten3d.mat');
 D3D=D3D.data;
 meanD3D=mean(transpose(D3D));
 [eValD3D,eVecD3D]=pca(D3D,1);
+
 plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0);
 title ('4a - 3D Daten Plot')
 
@@ -217,8 +218,11 @@ D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))]; %x-Koordinate 
 D3D_rec  =  eVecD3D*D3D_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
 D3D_shift =  D3D_rec+repmat(transpose(meanD3D),1,size(D3D,2)); %rezentrieren
 
+
 plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
 title ('4b - 3D Projektion')
+
+
 % 5. Shape Modell
 % (a) Berechnen Sie die PCA der Shape Daten in shape.mat die Matrix
 % aligned hat die Dimensionen nPunkte x nDimensionen x nShapes.
@@ -256,6 +260,7 @@ shapesmatwom=shapesmat-repshapesmean'; %shapes without mean
 % -> generateShape
 
 %10Bsp mit random vector (blau) + mean shape (rot):
+figure();
 plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
 hold on
 numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
