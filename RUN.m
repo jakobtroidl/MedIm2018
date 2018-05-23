@@ -239,7 +239,8 @@ end
 
 %LÖSCHEN shapes normieren, bzw verzerrung entfernen??
 shapesmean=mean(shapesmat'); %mean aller Punkte
-shapesmatwom=shapesmat-shapesmean'; %shapes without mean
+repshapesmean = repmat(shapesmean,size(shapesmat,2),1);
+shapesmatwom=shapesmat-repshapesmean'; %shapes without mean
 [shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
 
 % -> generateShape
