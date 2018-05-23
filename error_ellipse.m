@@ -93,7 +93,10 @@ if r==3 & c==3
   
   % Make the matrix has positive eigenvalues - else it's not a valid covariance matrix!
   if any(eig(C) <=0)
-    error('The covariance matrix must be positive definite (it has non-positive eigenvalues)')
+      test=eig(C);
+      if(test(1) <= -0.00000000001)
+          error('The covariance matrix must be positive definite (it has non-positive eigenvalues)')
+      end
   end
 
   % C is 3x3; extract the 2x2 matricies, and plot the associated error
@@ -119,6 +122,9 @@ if r==3 & c==3
   X(:) = scale*(k*XYZ(:,1)+x0);
   Y(:) = scale*(k*XYZ(:,2)+y0);
   Z(:) = scale*(k*XYZ(:,3)+z0);
+  X=real(X);
+  Y=real(Y);
+  Z=real(Z);
   h4=surf(X,Y,Z, 'EdgeAlpha', 0.1);
   %colormap gray
   alpha(0.1)
