@@ -230,18 +230,10 @@ title ('4b - 3D Projektion')
 % b mit einer Lange entsprechend der Zahl der Eigenvektoren neue
 % Shapes generieren kann.(4 Punkt)
 
-shapes = load('shapes.mat'); %Daten laden
+shapes = load('shapes.mat'); %Daten der 14 Knochen-Shapes laden
 shapes = shapes.aligned; %aligned auswaehlen
 
-%%von Jakob:
-%for i = 1 : size(shapes,1)
-%    point = shapes(i,:,:);
-%    C = permute(point,[1 3 2])
-%    C = reshape(C,[],size(point,2),1)
-%    C = C.'
-%%end
-
-
+%3D-input: 128 x 2 x 14
 %3dim Matrix in 2dim Matrix speichern: ([x(1 1);y(1 1);x(2 1);y(2
 %1);...],...,[x(1 14);...])
 for i=1:14
@@ -250,6 +242,7 @@ for i=1:14
         shapesmat(j*2-1,i)=shapes(j,1,i);
     end
 end
+%2D-output: 256 x 14, wobei x=ungerade Zeilen, y=gerade Zeilen
 
 %LÖSCHEN shapes normieren, bzw verzerrung entfernen??
 shapesmean=mean(shapesmat'); %mean aller Punkte
@@ -260,15 +253,15 @@ shapesmatwom=shapesmat-repshapesmean'; %shapes without mean
 % -> generateShape
 
 %10Bsp mit random vector (blau) + mean shape (rot):
-figure();
-plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
-hold on
-numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
-for i=1:10
-    bnew=round(randn(numposeVal,1)*10);
-    xnew=generateShape(bnew,shapeseVec,shapesmean);
-    plot([xnew(1:2:256);xnew(1)],[xnew(2:2:256);xnew(2)],'b')
-end
+% figure();
+% plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
+% hold on
+% numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
+% for i=1:10
+%     bnew=round(randn(numposeVal,1)*10);
+%     xnew=generateShape(bnew,shapeseVec,shapesmean);
+%     plot([xnew(1:2:256);xnew(1)],[xnew(2:2:256);xnew(2)],'b')
+% end
     
 % (b) Schreiben Sie eine Funktion plotShape, die die Shapes in blau darstellt
 % und plotten und interpretieren Sie die Einzelnen Modes (d.h. b ist 0
@@ -279,7 +272,10 @@ end
 
 %LÖSCHEN "Shapes in blau darstellt" -> alle shapes in grunddaten darstellen? (14
 %stück)??
+%Mode...Wie wirkt sich ein Eigenvektor auf die Form des Shapes aus?
+figure();
 plotShape(shapeseVal,shapeseVec,shapesmean);
+title ('5b - Modes')
 
 % (c) Setzen Sie nun b=randn(1,nEigenvectors).*stddeviations. Beschraenken
 % Sie nun wie in den 2D und 3D Beispielen die Zahl der Eigenvektoren,
@@ -316,11 +312,12 @@ b80=randn(1,nEigenvectors).*stddeviations;
 shapenew80=generateShape(b80',shapeseVec,shapesmean);
 
 %Alles ploten:
-plot([shapenew80(1:2:256);shapenew80(1)],[shapenew80(2:2:256);shapenew80(2)])
+figure();
+plot([shapenew80(1:2:256);shapenew80(1)],[shapenew80(2:2:256);shapenew80(2)],'b')
 hold on
-plot([shapenew90(1:2:256);shapenew90(1)],[shapenew90(2:2:256);shapenew90(2)])
-plot([shapenew95(1:2:256);shapenew95(1)],[shapenew95(2:2:256);shapenew95(2)])
-plot([shapenew100(1:2:256);shapenew100(1)],[shapenew100(2:2:256);shapenew100(2)])
-plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)])
+plot([shapenew90(1:2:256);shapenew90(1)],[shapenew90(2:2:256);shapenew90(2)],'g')
+plot([shapenew95(1:2:256);shapenew95(1)],[shapenew95(2:2:256);shapenew95(2)],'m')
+plot([shapenew100(1:2:256);shapenew100(1)],[shapenew100(2:2:256);shapenew100(2)],'k')
+plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
 hold off
 legend({'80% of Totvar','90% of Totvar','95% of Totvar','100% of Totvar','MeanShape'})
