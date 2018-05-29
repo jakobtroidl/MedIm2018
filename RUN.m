@@ -35,6 +35,7 @@
 
 D = load('daten.mat');
 
+
 D1 = D.data1;
 D2 = D.data2;
 D3 = D.data3;
@@ -43,16 +44,19 @@ D4 = D.data4;
 
 D = load('daten.mat');
 
+%Extration der Daten D1 - D4
 D1 = D.data1;
 D2 = D.data2;
 D3 = D.data3;
 D4 = D.data4;
 
+%Berechnung der Kovarianzmatrizen c1 - c4
 c1 = ourCov(D1,1)
 c2 = ourCov(D2,1)
 c3 = ourCov(D3,1)
 c4 = ourCov(D4,1)
 
+%Plotten der Datensätze D1 - D4
 figure();
 subplot(2,2,1)
 plot(D1(1,:), D1(2,:),'*');
@@ -89,6 +93,7 @@ axis equal
 % (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
 % ( 1 Punkt)
 
+%Berechnung der Eigenwerte und Eigenvectoren für die Datensätze D1-D4
 [eVal1,eVec1]=pca(D1,1);
 [eVal2,eVec2]=pca(D2,1);
 [eVal3,eVec3]=pca(D3,1);
@@ -103,6 +108,7 @@ dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
 D4trans = transpose(D4);
 dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
 
+%plotting the results of PCA
 plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
 title('2a - Data 1 2D PCA Plot');
 plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
@@ -115,17 +121,18 @@ title('2a - Data 4 2D PCA Plot');
 % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
 % Punkt)
 
-
+%siehe Bericht
 
 % (c) Was geben die Eigenwerte an? Wo sieht man das im Plot? In welcher
 % Relation stehen sie zur Gesamtvarianz? (1.5 Punkte)
 
-
+%siehe Bericht
 
 % (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
 % Berechnung? (1 Punkt)
 %Eigenvektoren werden auf Nullpunkt verschoben
 
+%Erklärung: siehe Bericht
 c1_0=ourCov(D1,0)
 [eVal1_0,eVec1_0]=pca(D1,0);
 plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1_0, eVal1_0, 1, 1);
@@ -139,18 +146,19 @@ title ('2d - Data 1 2D PCA Plot - ohne mean Abzug')
 % auf die Datenpunkte. Wie gross ist der Durchschnittliche Fehler
 % zwischen Rekonstruktion und Originaldaten? (3 Punkte)
 
-[eVal3,eVec3]=pca(D3,1);
-meanD3=mean(transpose(D3));
+[eVal3,eVec3]=pca(D3,1); %Berechnung der Eigenwerte und Eigenvektoren
+meanD3=mean(transpose(D3)); %Berechnung des Mean
 D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %Daten zentrieren (repmat() da ein Gruppenmitglied eine aeltere matlab Version verwendet und die Matrix-Vektor Subtraktion nicht funktioniert.)
 D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
 D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse) (jetzt nur mehr 1-dimensional)
 D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
 D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
 
+%Plotten der Ergebnisse
 plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
 title('3a - Projektion Hauptvektor');
 
-%Durchschnittlicher Fehler
+%Berechnung des durchschnittlichen Fehlers
 D3_hv_diff = D3-D3_hv_shift; %Abstaende der orinalen Punkte und der rekonstruierten
 for i=1:size(D3,2)
    D3_hv_distance(i)=norm(D3_hv_diff(:,i)); %Mit norm() Berechnung der Laenge all dieser Abstaende
@@ -188,7 +196,7 @@ D3_nv_err_nv = mean(transpose(D3_nv_distance))
 D3D=load('daten3d.mat');
 D3D=D3D.data;
 meanD3D=mean(transpose(D3D)); %mean berechnen
-[eValD3D,eVecD3D]=pca(D3D,1); %pca-funktion ausfuehren
+[eValD3D,eVecD3D]=pca(D3D,1); %pca-funktion ausfuehren (Berechnung der Eigenwerte und Eigenvektoren)
 
 plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0); %3D Darstellung inklusive Standarabweichungs Ellipsoide
 title ('4a - 3D Daten Plot')
