@@ -28,8 +28,6 @@
 
 % -> ourCov.m
 
-
-
 % (b) Berechnen Sie C fuer die Daten in daten.mat. Zeigen Sie die Daten
 % mit plot in separaten Figures und stellen Sie die Skalierung auf axis
 % equal. Interpretieren Sie die unterschiedlichen C zwischen den Datensets!
@@ -41,36 +39,44 @@ D1 = D.data1;
 D2 = D.data2;
 D3 = D.data3;
 D4 = D.data4;
-%
-% c1 = ourCov(D1,1)
-% figure();
-% plot(D1(1,:), D1(2,:),'*');
-% title('1b - Data 1 Plot');
-% axis on
-% axis equal
-%
-% c2 = ourCov(D2,1)
-% figure();
-% plot(D2(1,:), D2(2,:),'*');
-% title('1b - Data 2 Plot');
-% axis on
-% axis equal
-%
-% c3 = ourCov(D3,1)
-% figure();
-% plot(D3(1,:), D3(2,:),'*');
-% title('1b - Data 3 Plot');
-% axis on
-% axis equal
-%
-% c4 = ourCov(D4,1)
-% figure();
-% plot(D4(1,:), D4(2,:),'*');
-% title('1b - Data 4 Plot');
-% axis on
-% axis equal
-%
 
+
+D = load('daten.mat');
+
+D1 = D.data1;
+D2 = D.data2;
+D3 = D.data3;
+D4 = D.data4;
+
+c1 = ourCov(D1,1)
+c2 = ourCov(D2,1)
+c3 = ourCov(D3,1)
+c4 = ourCov(D4,1)
+
+figure();
+subplot(2,2,1)
+plot(D1(1,:), D1(2,:),'*');
+title('1b - Data 1 Plot');
+axis on
+axis equal
+
+subplot(2,2,2)
+plot(D2(1,:), D2(2,:),'*');
+title('1b - Data 2 Plot');
+axis on
+axis equal
+
+subplot(2,2,3)
+plot(D3(1,:), D3(2,:),'*');
+title('1b - Data 3 Plot');
+axis on
+axis equal
+
+subplot(2,2,4)
+plot(D4(1,:), D4(2,:),'*');
+title('1b - Data 4 Plot');
+axis on
+axis equal
 
 % 2. PCA { Schreiben Sie eine Funktion pca.m, die die PCA fuer D berechnet. Die
 % Berechnung soll unabhaengig von der Dimension der Daten sein. Ergebnis sind
@@ -80,118 +86,98 @@ D4 = D.data4;
 
 % -> pca.m
 
+% (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
+% ( 1 Punkt)
+
 [eVal1,eVec1]=pca(D1,1);
 [eVal2,eVec2]=pca(D2,1);
 [eVal3,eVec3]=pca(D3,1);
 [eVal4,eVec4]=pca(D4,1);
 
+D1trans = transpose(D1);
+dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
+D2trans = transpose(D2);
+dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
+D3trans = transpose(D3);
+dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
+D4trans = transpose(D4);
+dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
 
-% (a) Plotten Sie mit plot2DPCA.m Ihre Ergebnisse fuer die Daten aus daten.mat.
-% ( 1 Punkt)
+plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
+title('2a - Data 1 2D PCA Plot');
+plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
+title('2a - Data 2 2D PCA Plot');
+plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
+title('2a - Data 3 2D PCA Plot');
+plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
+title('2a - Data 4 2D PCA Plot');
 
-%  disp('2d pca D1 ')
-%  D1trans = transpose(D1);
-%  dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-%  plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
-%  title('2a - Data 1 2D PCA Plot');
-%
-% disp('2d pca D2 ')
-% D2trans = transpose(D2);
-% dummyReconstruction2 = D2trans;  % here you would use your reconstructed data
-% plot2DPCA(D2trans, mean(D2trans), dummyReconstruction2, eVec2, eVal2, 1, 1);
-% title('2a - Data 2 2D PCA Plot');
-%
-% disp('2d pca D3 ')
-% D3trans = transpose(D3);
-% dummyReconstruction3 = D3trans;  % here you would use your reconstructed data
-% plot2DPCA(D3trans, mean(D3trans), dummyReconstruction3, eVec3, eVal3, 1, 1);
-% title('2a - Data 3 2D PCA Plot');
-%
-% disp('2d pca D4 ')
-% D4trans = transpose(D4);
-% dummyReconstruction4 = D4trans;  % here you would use your reconstructed data
-% plot2DPCA(D4trans, mean(D4trans), dummyReconstruction4, eVec4, eVal4, 1, 1);
-% title('2a - Data 4 2D PCA Plot');
-%
-% % (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
-% % Punkt)
-%
-%
-%
-% % (c) Was geben die Eigenwerte an? Wo sieht man das im Plot? In welcher
-% % Relation stehen sie zur Gesamtvarianz? (1.5 Punkte)
-%
-%
-%
-% % (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
-% % Berechnung? (1 Punkt)
-% %Eigenvektoren werden auf Nullpunkt verschoben
-% disp('2d pca D1 ')
-% D1trans = transpose(D1);
-% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1, eVal1, 1, 1);
-% 
-% [eVal1_0,eVec1_0]=pca(D1,0);
-% disp('2d pca D1 ')
-% D1trans = transpose(D1);
-% dummyReconstruction1 = D1trans;  % here you would use your reconstructed data
-% plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1_0, eVal1_0, 1, 1);
+% (b) Was geben die Eigenvektoren an? Wo sieht man das im Plot? (1.5
+% Punkt)
+
+
+
+% (c) Was geben die Eigenwerte an? Wo sieht man das im Plot? In welcher
+% Relation stehen sie zur Gesamtvarianz? (1.5 Punkte)
+
+
+
+% (d) Welchen Einfluss hat ein fehlender Mittelwertabzug (bei D) auf die
+% Berechnung? (1 Punkt)
+%Eigenvektoren werden auf Nullpunkt verschoben
+
+c1_0=ourCov(D1,0)
+[eVal1_0,eVec1_0]=pca(D1,0);
+plot2DPCA(D1trans, mean(D1trans), dummyReconstruction1, eVec1_0, eVal1_0, 1, 1);
+title ('2d - Data 1 2D PCA Plot - ohne mean Abzug')
 
 % 3. Unterraum-Projektion
-% (a) Berechnen Sie die PCA fur data3. Projiziieren Sie die Daten in data3
+% (a) Berechnen Sie die PCA fuer data3. Projiziieren Sie die Daten in data3
 % auf den Hauptvektor (Plot). Welche Dimension haben Ihre Daten jetzt?
 % Rekonstruieren Sie die Projektion und plotten Sie das Ergebnis mittels
-% plot2DPCA.m. Beschreiben Sie den Eekt von Projektion und Rekonstruktion
-% auf die Datenpunkte. Wie gro ist der Durchschnittliche Fehler
+% plot2DPCA.m. Beschreiben Sie den Effekt von Projektion und Rekonstruktion
+% auf die Datenpunkte. Wie gross ist der Durchschnittliche Fehler
 % zwischen Rekonstruktion und Originaldaten? (3 Punkte)
-% [eVal3,eVec3]=pca(D3,1);
-% meanD3=mean(transpose(D3));
-% D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
-% D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-% D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse)
-% D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
-% D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
-%
-% disp('2d pca D3_hv ')
-% plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
-% title('3a - Projektion Hauptvektor');
-%
-% %Durchschnittlicher Fehler
-%
-%
-% D3_hv_diff = D3-D3_hv_shift;
-% for i=1:size(D3,2)
-%    D3_hv_distance(i)=norm(D3_hv_diff(:,i));
-% end
-% D3_hv_err_hv = mean(transpose(D3_hv_distance))
-%
-% % (b) Machen Sie die selbe Untersuchung, nur mit dem Nebenvektor. Welche
-% % Eigenvektoren werden Sie verwenden, um eine Datenmatrix mit
-% % moglichst wenig Fehler mit moglichst wenig Eigenvektoren (in diesem
-% % Fall 1) darzustellen? (1 Punkt)
-% [eVal3,eVec3]=pca(D3,1);
-% meanD3=mean(transpose(D3));
-%
-% D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
-% D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
-% D3_nv_proj =  [zeros(1,size(D3_nv_rot,2));D3_nv_rot(2,:)]; %x-Koordinate auf 0 gesetzt, y Koordinaten bleiben gleich (Projektion auf y Achse)
-% D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
-% D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
-%
-% disp('2d pca D3_nv ')
-% plot2DPCA(transpose(D3), meanD3, transpose(D3_nv_shift), eVec3, eVal3, 1, 1);
-% title('3a - Projektion Nebenvektor');
-%
-% %Durchschnittlicher Fehler
-%
-% D3_nv_diff = D3-D3_nv_shift;
-% for i=1:size(D3,2)
-%    D3_nv_distance(i)=norm(D3_nv_diff(:,i));
-% end
-% D3_nv_distance;
-% D3_nv_err_nv = mean(transpose(D3_nv_distance))
 
+[eVal3,eVec3]=pca(D3,1);
+meanD3=mean(transpose(D3));
+D3_hv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %Daten zentrieren (repmat() da ein Gruppenmitglied eine aeltere matlab Version verwendet und die Matrix-Vektor Subtraktion nicht funktioniert.)
+D3_hv_rot  =  transpose(eVec3)*D3_hv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+D3_hv_proj =  [D3_hv_rot(1,:);zeros(1,size(D3_hv_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten auf 0 abgebildet (Projektion auf x-Achse) (jetzt nur mehr 1-dimensional)
+D3_hv_rec  =  eVec3*D3_hv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3_hv_shift =  D3_hv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
 
+plot2DPCA(transpose(D3), meanD3, transpose(D3_hv_shift), eVec3, eVal3, 1, 1);
+title('3a - Projektion Hauptvektor');
+
+%Durchschnittlicher Fehler
+D3_hv_diff = D3-D3_hv_shift; %Abstaende der orinalen Punkte und der rekonstruierten
+for i=1:size(D3,2)
+   D3_hv_distance(i)=norm(D3_hv_diff(:,i)); %Mit norm() Berechnung der Laenge all dieser Abstaende
+end
+D3_hv_err_hv = mean(transpose(D3_hv_distance)) %Durchschnitt dieser Laengen
+
+% (b) Machen Sie die selbe Untersuchung, nur mit dem Nebenvektor. Welche
+% Eigenvektoren werden Sie verwenden, um eine Datenmatrix mit
+% moglichst wenig Fehler mit moglichst wenig Eigenvektoren (in diesem
+% Fall 1) darzustellen? (1 Punkt)
+
+D3_nv_zent =  D3-repmat(transpose(meanD3),1,size(D3,2)); %zentrieren
+D3_nv_rot  =  transpose(eVec3)*D3_nv_zent; % Rotation, sodass die Eigenvektoren die X und Y Achse sind
+D3_nv_proj =  [zeros(1,size(D3_hv_rot,2));D3_hv_rot(2,:)]; %x-Koordinate auf 0 gesetzt, y Koordinaten bleiben gleich (Projektion auf y Achse)
+D3_nv_rec  =  eVec3*D3_nv_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
+D3_nv_shift =  D3_nv_rec+repmat(transpose(meanD3),1,size(D3,2)); %rezentrieren
+
+plot2DPCA(transpose(D3), meanD3, transpose(D3_nv_shift), eVec3, eVal3, 1, 1);
+title('3a - Projektion Nebenvektor');
+
+%Durchschnittlicher Fehler
+D3_nv_diff = D3-D3_nv_shift;
+for i=1:size(D3,2)
+   D3_nv_distance(i)=norm(D3_nv_diff(:,i));
+end
+D3_nv_distance;
+D3_nv_err_nv = mean(transpose(D3_nv_distance))
 
 % 4. Untersuchungen in 3D
 % (a) Berechnen Sie die PCA und plotten Sie Daten und Eigenvektoren fuer
@@ -201,10 +187,10 @@ D4 = D.data4;
 
 D3D=load('daten3d.mat');
 D3D=D3D.data;
-meanD3D=mean(transpose(D3D));
-[eValD3D,eVecD3D]=pca(D3D,1);
+meanD3D=mean(transpose(D3D)); %mean berechnen
+[eValD3D,eVecD3D]=pca(D3D,1); %pca-funktion ausfuehren
 
-plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0);
+plot3DPCA(transpose(D3D), meanD3D, eVecD3D, eValD3D, 1, 0); %3D Darstellung inklusive Standarabweichungs Ellipsoide
 title ('4a - 3D Daten Plot')
 
 % (b) Projiziieren Sie auf den Unterraum, der durch die ersten beiden Eigenvektoren
@@ -212,26 +198,24 @@ title ('4a - 3D Daten Plot')
 % Rekonstruieren Sie die Punkte im Originalraum und plotten Sie das
 % Ergebnis. Welche Information ist verloren gegangen? (1 Punkt)
 
-D3D_zent =  D3D-repmat(transpose(meanD3D),1,size(D3D,2)); %zentrieren
+D3D_zent =  D3D-repmat(transpose(meanD3D),1,size(D3D,2)); %Daten zentrieren (wieder repmat() wegen aelterer matlab Version)
 D3D_rot  =  transpose(eVecD3D)*D3D_zent; % Rotation, sodass die Eigenvektoren die X, Y und Z Achse sind
-D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))]; %x-Koordinate bleibt gleich, y Koordinaten bleiben gleich, z-koordinate auf 0 gesetzt (Projektion auf z Achse)
+D3D_proj =  [D3D_rot(1,:);D3D_rot(2,:);zeros(1,size(D3D_rot,2))]; %x Koordinaten bleiben gleich, y Koordinaten bleiben gleich, z Koordinaten auf 0 gesetzt (Projektion auf x-y Ebene)
 D3D_rec  =  eVecD3D*D3D_proj; %inverse of eVec3 = transpose of eVec3, wegen gleicher orthonormal basis
 D3D_shift =  D3D_rec+repmat(transpose(meanD3D),1,size(D3D,2)); %rezentrieren
 
-
-plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 1, 1);
+plot3DPCA(transpose(D3D_shift), meanD3D, eVecD3D, eValD3D, 0, 0); %3D Darstellung der Rekonstruktion
 title ('4b - 3D Projektion')
-
 
 % 5. Shape Modell
 % (a) Berechnen Sie die PCA der Shape Daten in shape.mat die Matrix
 % aligned hat die Dimensionen nPunkte x nDimensionen x nShapes.
 % Schreiben Sie eine Funktion generateShape, die zu einem Parametervektor
-% b mit einer Lange entsprechend der Zahl der Eigenvektoren neue
+% b mit einer Laenge entsprechend der Zahl der Eigenvektoren neue
 % Shapes generieren kann.(4 Punkt)
 
 shapes = load('shapes.mat'); %Daten der 14 Knochen-Shapes laden
-shapes = shapes.aligned; %aligned auswaehlen
+shapes = shapes.aligned; %aligned auswaehlen (bereits normierte und zentrierte Daten)
 
 %3D-input: 128 x 2 x 14
 %3dim Matrix in 2dim Matrix speichern: ([x(1 1);y(1 1);x(2 1);y(2
@@ -244,25 +228,11 @@ for i=1:14
 end
 %2D-output: 256 x 14, wobei x=ungerade Zeilen, y=gerade Zeilen
 
-%LÖSCHEN shapes normieren, bzw verzerrung entfernen??
 shapesmean=mean(shapesmat'); %mean aller Punkte
-repshapesmean = repmat(shapesmean,size(shapesmat,2),1);
-shapesmatwom=shapesmat-repshapesmean'; %shapes without mean
-[shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
+[shapeseVal,shapeseVec]=pca(shapesmat,1); %pca wird von zentrierten Daten berechnet. (unsere Ausgangsdaten sind bereits zentriert)
 
 % -> generateShape
 
-%10Bsp mit random vector (blau) + mean shape (rot):
-% figure();
-% plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
-% hold on
-% numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
-% for i=1:10
-%     bnew=round(randn(numposeVal,1)*10);
-%     xnew=generateShape(bnew,shapeseVec,shapesmean);
-%     plot([xnew(1:2:256);xnew(1)],[xnew(2:2:256);xnew(2)],'b')
-% end
-    
 % (b) Schreiben Sie eine Funktion plotShape, die die Shapes in blau darstellt
 % und plotten und interpretieren Sie die Einzelnen Modes (d.h. b ist 0
 % bis auf einen Wert) im Bereich von +/-3 lambda, wobei lambda die Standardabweichung
@@ -270,12 +240,8 @@ shapesmatwom=shapesmat-repshapesmean'; %shapes without mean
 % auch das mean shape (d.h. b gleich dem Nullvektor) in rot darstellen.
 % Beschreiben und interpretieren Sie. (4 Punkt)
 
-%LÖSCHEN "Shapes in blau darstellt" -> alle shapes in grunddaten darstellen? (14
-%stück)??
-%Mode...Wie wirkt sich ein Eigenvektor auf die Form des Shapes aus?
 figure();
 plotShape(shapeseVal,shapeseVec,shapesmean);
-title ('5b - Modes')
 
 % (c) Setzen Sie nun b=randn(1,nEigenvectors).*stddeviations. Beschraenken
 % Sie nun wie in den 2D und 3D Beispielen die Zahl der Eigenvektoren,
@@ -283,6 +249,7 @@ title ('5b - Modes')
 % und interpretieren Sie. Beschraenken Sie so, dass das Shape Modell
 % 100%, 95%, 90% und 80% der Gesamtvarianz beinhaltet.(4 Punkt)
 
+numposeVal=sum(shapeseVal>0.0000000001);%Anzahl Eigenwerte > 0
 antgesamtvar=shapeseVal(1:numposeVal)/sum(shapeseVal(1:numposeVal)); %Anteil der Gesamtvarianz
 kumgesamtvar=cumsum(antgesamtvar); %kumulierte Gesamtvarianz
 
@@ -320,4 +287,6 @@ plot([shapenew95(1:2:256);shapenew95(1)],[shapenew95(2:2:256);shapenew95(2)],'m'
 plot([shapenew100(1:2:256);shapenew100(1)],[shapenew100(2:2:256);shapenew100(2)],'k')
 plot([shapesmean(1:2:256),shapesmean(1)],[shapesmean(2:2:256),shapesmean(2)],'r')
 hold off
+axis equal
 legend({'80% of Totvar','90% of Totvar','95% of Totvar','100% of Totvar','MeanShape'})
+title('Anteil der Gesamtvarianz')
