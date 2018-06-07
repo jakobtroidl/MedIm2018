@@ -358,6 +358,7 @@ for i=1:50
     for j=1:64
         shapesmat(j*2,i)=shapes(j,2,i);
         shapesmat(j*2-1,i)=shapes(j,1,i);
+        
     end
 end
 
@@ -365,8 +366,21 @@ shapesmean=mean(shapesmat'); %mean aller Punkte
 shapesmatwom=shapesmat-shapesmean'; %shapes without mean
 [shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
  
-% -> generateShape
+bnew=ones(10,1);
+sampleshape1=generateShape(bnew,shapeseVec,shapesmean,0,1,0,0);
+sampleshape2=generateShape(bnew,shapeseVec,shapesmean,90,1,0,0);
+sampleshape3=generateShape(bnew,shapeseVec,shapesmean,90,0.5,50,0);
+sampleshape4=generateShape(bnew,shapeseVec,shapesmean,90,1,50,100);
+sampleshape5=generateShape(bnew,shapeseVec,shapesmean,60,2,0,0);
 
+hold on
+plot([sampleshape1(1,:),sampleshape1(1,1)],[sampleshape1(2,:),sampleshape1(2,1)])
+plot([sampleshape2(1,:),sampleshape2(1,1)],[sampleshape2(2,:),sampleshape2(2,1)])
+plot([sampleshape3(1,:),sampleshape3(1,1)],[sampleshape3(2,:),sampleshape3(2,1)])
+plot([sampleshape4(1,:),sampleshape4(1,1)],[sampleshape4(2,:),sampleshape4(2,1)])
+plot([sampleshape5(1,:),sampleshape5(1,1)],[sampleshape5(2,:),sampleshape5(2,1)])
+axis equal
+legend('normal','r:90deg','r:90deg,s:0.5,tx:50','r:90deg,tx:50,ty:100','r:60deg,s:2')
 
 % % 2. Featureberechnung (7 Punkte) { Schreiben Sie eine Funktion computeFeatures(image),
 % % die fur ein Bild die folgenden Features berechnet und als nfeatures  npixels
@@ -415,7 +429,7 @@ shapesmatwom=shapesmat-shapesmean'; %shapes without mean
 
 % % (b) Erstellen Sie eine Kostenfunktion, die zu einem Paramtervektor p dem
 % % Klassifikatorergebnis auf einem Testbild einen skalaren Wert liefert, der
-% % umso kleiner wird, je besser das daraus generierte Shape auf das Klassi-
+% % umso kleiner wird, je besser das daraus generierte Shape auf das Klassi
 % % katorergebnis (denWahrscheinlichkeiten fur den modellierten Knochen)
 % % passt.
 
