@@ -346,6 +346,28 @@
 % % Werte von Skalierung und Rotation.
 % % 1siehe PDF deBruijne2004MICCAI_ParticleFilters.pdf
 
+
+
+
+handdata = load('handdata.mat');
+shapes = handdata.aligned; %aligned auswaehlen
+
+%3dim Matrix in 2dim Matrix speichern: ([x(1 1);y(1 1);x(2 1);y(2
+%1);...],...,[x(1 14);...])
+for i=1:50
+    for j=1:64
+        shapesmat(j*2,i)=shapes(j,2,i);
+        shapesmat(j*2-1,i)=shapes(j,1,i);
+    end
+end
+
+shapesmean=mean(shapesmat'); %mean aller Punkte
+shapesmatwom=shapesmat-shapesmean'; %shapes without mean
+[shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
+ 
+% -> generateShape
+
+
 % % 2. Featureberechnung (7 Punkte) { Schreiben Sie eine Funktion computeFeatures(image),
 % % die fur ein Bild die folgenden Features berechnet und als nfeatures  npixels
 % % Matrix retourniert:
