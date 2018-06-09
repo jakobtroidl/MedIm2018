@@ -66,6 +66,7 @@ sampleshape3=generateShape(bnew,shapeseVec,shapesmean,90,0.5,50,0);
 sampleshape4=generateShape(bnew,shapeseVec,shapesmean,90,1,50,100);
 sampleshape5=generateShape(bnew,shapeseVec,shapesmean,60,2,0,0);
 
+figure();
 hold on
 plot([sampleshape1(1,:),sampleshape1(1,1)],[sampleshape1(2,:),sampleshape1(2,1)])
 plot([sampleshape2(1,:),sampleshape2(1,1)],[sampleshape2(2,:),sampleshape2(2,1)])
@@ -74,6 +75,7 @@ plot([sampleshape4(1,:),sampleshape4(1,1)],[sampleshape4(2,:),sampleshape4(2,1)]
 plot([sampleshape5(1,:),sampleshape5(1,1)],[sampleshape5(2,:),sampleshape5(2,1)])
 axis equal
 legend('normal','r:90deg','r:90deg,s:0.5,tx:50','r:90deg,tx:50,ty:100','r:60deg,s:2')
+hold off
 
 % % 2. Featureberechnung (7 Punkte) { Schreiben Sie eine Funktion computeFeatures(image),
 % % die fur ein Bild die folgenden Features berechnet und als nfeatures x npixels
@@ -92,7 +94,7 @@ legend('normal','r:90deg','r:90deg,s:0.5,tx:50','r:90deg,tx:50,ty:100','r:60deg,
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
 imagesc=computeFeatures(image1);
-imagesccache=cache(imagesc); %FEHLER! welcher input par???
+%imagesccache=cache(imagesc); %FEHLER!!!!!!!! welcher input par???
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
@@ -106,6 +108,22 @@ imagesccache=cache(imagesc); %FEHLER! welcher input par???
 % % Um das Trainieren zu beschleunigen, verwenden Sie alle Pixel der
 % % Knochenkontur, aber nur ein zufallig auswahltes Subset der Hintergrundpixel
 % % (gleichviele Samples fur Kontur/Hintergrund).
+
+landmarks1=cell2mat(handdata.landmarks(1));
+figure();
+imshow(image1);
+hold on
+plot([landmarks1(1,:),landmarks1(1,1)],[landmarks1(2,:),landmarks1(2,1)]);
+hold off
+
+masks1=cell2mat(handdata.masks(1));
+figure();
+imshow(masks1);
+
+images=handdata.images;
+masks=handdata.masks;
+finalrf=train(images,masks);
+
 
 % % (b) Untersuchen und Interpretieren Sie den Ein
 % % uss der Anzahl von Trees

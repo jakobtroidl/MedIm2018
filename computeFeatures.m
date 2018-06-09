@@ -15,18 +15,18 @@ hlimage=computeHaarLike(image);
 %Haar-Like Feature berechnet auf der Gradientenstärke
 hlgrad=computeHaarLike(Imgradmag);
 
-hilfsmat=repmat((1:306)',1,143);%Hilfsmatrix für y-Koordinaten
+hilfsmat=repmat((1:size(image,1))',1,size(image,2));%Hilfsmatrix für y-Koordinaten
 %feature-matrix:
-for i=1:306
-    features(1,((i-1)*143+1):(i*143))=image(i,:); %grau werte
-    features(2,((i-1)*143+1):(i*143))=FX(i,:); %Gradient in x-Richtung
-    features(3,((i-1)*143+1):(i*143))=FY(i,:); %Gradient in y-Richtung
-    features(4,((i-1)*143+1):(i*143))=Imgradmag(i,:); %Gradientenstärke
-    features(8,((i-1)*143+1):(i*143))=hilfsmat(i,:); %y-Koordinate des Pixels
+for i=1:size(image,1)
+    features(1,((i-1)*size(image,2)+1):(i*size(image,2)))=image(i,:); %grau werte
+    features(2,((i-1)*size(image,2)+1):(i*size(image,2)))=FX(i,:); %Gradient in x-Richtung
+    features(3,((i-1)*size(image,2)+1):(i*size(image,2)))=FY(i,:); %Gradient in y-Richtung
+    features(4,((i-1)*size(image,2)+1):(i*size(image,2)))=Imgradmag(i,:); %Gradientenstärke
+    features(8,((i-1)*size(image,2)+1):(i*size(image,2)))=hilfsmat(i,:); %y-Koordinate des Pixels
 end
 
 features(5,:)=hlimage(1,:); %Haar-like Feature(1) des Grauwertbildes
 features(6,:)=hlgrad(1,:); %Haar-like Feature(1) der Gradientenstärke
-features(7,:)=repmat(1:143,1,306); %x-Koordinate des Pixels
+features(7,:)=repmat(1:size(image,2),1,size(image,1)); %x-Koordinate des Pixels
 end
 
