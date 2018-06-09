@@ -1,3 +1,4 @@
+
 %_______________________________________________________________________________
 %_____________________Projekt 2________________________________________
 %_____________________________________________________________________
@@ -75,7 +76,7 @@ axis equal
 legend('normal','r:90deg','r:90deg,s:0.5,tx:50','r:90deg,tx:50,ty:100','r:60deg,s:2')
 
 % % 2. Featureberechnung (7 Punkte) { Schreiben Sie eine Funktion computeFeatures(image),
-% % die fur ein Bild die folgenden Features berechnet und als nfeatures  npixels
+% % die fur ein Bild die folgenden Features berechnet und als nfeatures x npixels
 % % Matrix retourniert:
 % %  Grauwert des Pixels
 % %  Gradient in x- und y-Richtung
@@ -87,7 +88,11 @@ legend('normal','r:90deg','r:90deg,s:0.5,tx:50','r:90deg,tx:50,ty:100','r:60deg,
 % % Stellen Sie diese Features fur Bild 1 mit imagesc dar (von den Haar-like
 % % jeweils nur das erste Feature). Sobald die Featureberechnung funktioniert,
 % % kann sie einfach mit cache gecacht werden. Gerne konnen auch weitere Features
-% % berechnet und evaluiert werden!
+% % berechnet und evaluiert werden.
+
+image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
+imagesc=computeFeatures(image1);
+imagesccache=cache(imagesc); %FEHLER! welcher input par???
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
