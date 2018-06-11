@@ -92,11 +92,11 @@ hold off
 % % kann sie einfach mit cache gecacht werden. Gerne konnen auch weitere Features
 % % berechnet und evaluiert werden.
 
-addpath(genpath('providedFunctions/'));
+addpath(genpath('providedFunctions'))
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
 imagesc=computeFeatures(image1);
-%imagesccache=cache(imagesc); %FEHLER!!!!!!!! welcher input par???
+%imagesccache=cache(double(imagesc)); %FEHLER!!!!!!!! welcher input par???
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
@@ -111,13 +111,13 @@ imagesc=computeFeatures(image1);
 % % Knochenkontur, aber nur ein zufallig auswahltes Subset der Hintergrundpixel
 % % (gleichviele Samples fur Kontur/Hintergrund).
 
+% LOESCHEN!! nur zur Darstellung 
 landmarks1=cell2mat(handdata.landmarks(1));
 figure();
 imshow(image1);
 hold on
 plot([landmarks1(1,:),landmarks1(1,1)],[landmarks1(2,:),landmarks1(2,1)]);
 hold off
-
 masks1=cell2mat(handdata.masks(1));
 figure();
 imshow(masks1);
@@ -130,6 +130,9 @@ finalrf=train(images,masks);
 % % (b) Untersuchen und Interpretieren Sie den Ein
 % % uss der Anzahl von Trees
 % % mittels oobError
+
+%oobErro in treebags funktion enthalten
+
 % % (c) Untersuchen und Interpretieren Sie die Wichtigkeit der verschiedenen
 % % Features mittels plot(rf.OOBPermutedVarDeltaError).
 % % 2http://www.cognotics.com/opencv/servo_2007_series/part_2/sidebar.html
