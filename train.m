@@ -16,6 +16,7 @@ for i=1:30
     %gleichviele, zufällige Hintergrundpixel wie Konturpixel als Label verwenden
     currentmask=cell2mat(masks(i));
     %Currentmask als Zeilenvektor speichern
+    clear label
     for j=1:size(currentmask,1)
         label(1,((j-1)*size(currentmask,2)+1):(j*size(currentmask,2)))=currentmask(j,:); 
     end
@@ -23,7 +24,7 @@ for i=1:30
     zeoroind=find(label==0); %Indizes wo label==0 (Hintergrundpixel)
     backgroundlabel=zeoroind(randperm(size(zeoroind,2),anzkonturpixel)); %Zufällige Auswahl an Hintergrundpixelindizes
     label(backgroundlabel)=5; %Zuweisung der Hintergrundpixel zum Label(label<>0), aber mit 5 gespeichert zur Unterscheidung von Konturpixel
-    
+
     if i==1
         labelgesamt=label;
     else    
