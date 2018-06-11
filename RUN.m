@@ -92,6 +92,8 @@ hold off
 % % kann sie einfach mit cache gecacht werden. Gerne konnen auch weitere Features
 % % berechnet und evaluiert werden.
 
+addpath(genpath('providedFunctions/'));
+
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
 imagesc=computeFeatures(image1);
 %imagesccache=cache(imagesc); %FEHLER!!!!!!!! welcher input par???
