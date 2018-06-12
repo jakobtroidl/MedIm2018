@@ -124,19 +124,35 @@ imshow(masks1);
 
 images=handdata.images;
 masks=handdata.masks;
-finalrf=train(images,masks);
+rf=train(images,masks);
+%LOESCHEN!! view(rf.Trees{1},'Mode','graph'); 
 
+% % (b) Untersuchen und Interpretieren Sie den Einfluss der Anzahl von
+% % Trees mittels oobError
 
-% % (b) Untersuchen und Interpretieren Sie den Ein
-% % uss der Anzahl von Trees
-% % mittels oobError
+figure;
+oobErrorBaggedEnsemble = oobError(rf);
+plot(oobErrorBaggedEnsemble)
+xlabel 'Number of grown trees';
+ylabel 'Out-of-bag classification error';
 
-%oobErro in treebags funktion enthalten
+%--> Der 'out-of-bag error' nimmt mit wachsender Anzahl an Baeumen ab.
 
 % % (c) Untersuchen und Interpretieren Sie die Wichtigkeit der verschiedenen
 % % Features mittels plot(rf.OOBPermutedVarDeltaError).
-% % 2http://www.cognotics.com/opencv/servo_2007_series/part_2/sidebar.html
-% % 3http://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm
+
+figure;
+bar(rf.OOBPermutedVarDeltaError);
+title('Curvature Test');
+ylabel('Predictor importance estimates');
+xlabel('Predictors');
+h = gca;
+h.XTickLabel = ({'Grauwerte','Grad-x','Grad-y','Grad-Staerke','HL Grauw','HL Grad-Staerke','x-Koord','y-Koord'});
+h.XTickLabelRotation = 45;
+h.TickLabelInterpreter = 'none';
+
+%--> In diesem Fall ist die x-Koordinate der wichtigste Prädikator, gefolgt
+%von der y-Koordinate, der Gradientenstaerke und dem Grauwert.
 
 % % 4. Shape Particle Filters (17 Punkte) Wir formulieren eine Funktion, die
 % % die Kosten modelliert, ein Shape auf ein Target-Bild zu plotten. D.h. wir suchen

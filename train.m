@@ -1,6 +1,8 @@
-function randomfor = train(images,masks)
+function rf = train(images,masks)
 
 %treebagger matlab funktion
+
+rng(1) %zur Reproduzierbarkeit der Ergebnisse
 
 for i=1:30
     %Featurematrizen der Trainingsbilder Blockspaltenweise in einer
@@ -25,6 +27,7 @@ for i=1:30
     backgroundlabel=zeoroind(randperm(size(zeoroind,2),anzkonturpixel)); %Zufällige Auswahl an Hintergrundpixelindizes
     label(backgroundlabel)=5; %Zuweisung der Hintergrundpixel zum Label(label<>0), aber mit 5 gespeichert zur Unterscheidung von Konturpixel
 
+    %Labels in Gesamtmatrix abspeichern
     if i==1
         labelgesamt=label;
     else    
@@ -33,12 +36,13 @@ for i=1:30
     
 end
 
-size(features)
-size(labelgesamt)
+%Training beschraenken auf die Konturpixel und das zufaellig ausgewaehlte
+%Subset der Hintergrundpixel
+impLabelsInd=find(labelgesamt~=0); %Indizes aller trainingsrelevanten Pixel
+LabelFeatures=double(features(:,impLabelsInd)); %Die zugehoerigen Features zu den trainingsrelevanten Pixel und die Umwandlung von uint8 in double um die implementierte TreeBagger Funktion ordentlich verwenden zu koennen.
+impLabels=labelgesamt(impLabelsInd); %Labels aller trainingsrelevanten Pixel
 
-
-
-randomfor=labelgesamt;
-
+%Aufruf der implementierten TreeBagger Funktion:
+rf=TreeBagger(32,LabelFeatures',impLabels','OOBVarImp','on'); %Baumanzahl:32
 end
 
