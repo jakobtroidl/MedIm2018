@@ -95,8 +95,7 @@ hold off
 addpath(genpath('providedFunctions'))
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
-imagesc=computeFeatures(image1);
-%imagesccache=cache(double(imagesc)); %FEHLER!!!!!!!! welcher input par???
+imagesccache=cache(@computeFeatures,image1); %FEHLER!!!!!!!! welcher input par???
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
@@ -111,21 +110,21 @@ imagesc=computeFeatures(image1);
 % % Knochenkontur, aber nur ein zufallig auswahltes Subset der Hintergrundpixel
 % % (gleichviele Samples fur Kontur/Hintergrund).
 
-% LOESCHEN!! nur zur Darstellung 
-landmarks1=cell2mat(handdata.landmarks(1));
-figure();
-imshow(image1);
-hold on
-plot([landmarks1(1,:),landmarks1(1,1)],[landmarks1(2,:),landmarks1(2,1)]);
-hold off
-masks1=cell2mat(handdata.masks(1));
-figure();
-imshow(masks1);
+% % % % % % % LOESCHEN!! nur zur Darstellung 
+% % % % % % landmarks1=cell2mat(handdata.landmarks(1));
+% % % % % % figure();
+% % % % % % imshow(image1);
+% % % % % % hold on
+% % % % % % plot([landmarks1(1,:),landmarks1(1,1)],[landmarks1(2,:),landmarks1(2,1)]);
+% % % % % % hold off
+% % % % % % masks1=cell2mat(handdata.masks(1));
+% % % % % % figure();
+% % % % % % imshow(masks1);
 
 images=handdata.images;
 masks=handdata.masks;
-rf=train(images,masks);
-%LOESCHEN!! view(rf.Trees{1},'Mode','graph'); 
+rf=cache(@train,images,masks);
+%%%%%%%%%%%%%LOESCHEN!! view(rf.Trees{1},'Mode','graph'); 
 
 % % (b) Untersuchen und Interpretieren Sie den Einfluss der Anzahl von
 % % Trees mittels oobError
@@ -136,7 +135,8 @@ plot(oobErrorBaggedEnsemble)
 xlabel 'Number of grown trees';
 ylabel 'Out-of-bag classification error';
 
-%--> Der 'out-of-bag error' nimmt mit wachsender Anzahl an Baeumen ab.
+%--> Der 'out-of-bag error' nimmt mit wachsender Anzahl an Baeumen ab. ->
+%15 wäre schon sehr gut und bezueglich Laufzeit eventuell besser.
 
 % % (c) Untersuchen und Interpretieren Sie die Wichtigkeit der verschiedenen
 % % Features mittels plot(rf.OOBPermutedVarDeltaError).
@@ -153,6 +153,7 @@ h.TickLabelInterpreter = 'none';
 
 %--> In diesem Fall ist die x-Koordinate der wichtigste Prädikator, gefolgt
 %von der y-Koordinate, der Gradientenstaerke und dem Grauwert.
+
 
 % % 4. Shape Particle Filters (17 Punkte) Wir formulieren eine Funktion, die
 % % die Kosten modelliert, ein Shape auf ein Target-Bild zu plotten. D.h. wir suchen
