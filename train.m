@@ -1,6 +1,6 @@
-function rf = train(images,masks)
-
+function [rf,pcashape] = train(images,masks,shapes,bsp4)
 %treebagger matlab funktion
+pcashape=0; %output bei bsp3
 
 rng(1) %zur Reproduzierbarkeit der Ergebnisse
 
@@ -44,5 +44,22 @@ impLabels=labelgesamt(impLabelsInd); %Labels aller trainingsrelevanten Pixel
 
 %Aufruf der implementierten TreeBagger Funktion:
 rf=TreeBagger(32,LabelFeatures',impLabels','OOBVarImp','on'); %Baumanzahl:32
+
+    if bsp4
+        
+        %3dim Matrix in 2dim Matrix speichern: ([x(1 1);y(1 1);x(2 1);y(2
+        %1);...],...,[x(1 14);...])
+        for i=1:50
+            for j=1:64
+                shapesmat(j*2,i)=shapes(j,2,i);
+                shapesmat(j*2-1,i)=shapes(j,1,i);
+
+            end
+        end
+        shapesmean=mean(shapesmat'); %mean aller Punkte
+        shapesmatwom=shapesmat-shapesmean'; %shapes without mean
+        [shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
+        pcashape=[shapesmean',shapeseVal,shapeseVec]; %ausgabe bei bsp4       
+    end
 end
 
