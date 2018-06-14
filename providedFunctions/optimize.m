@@ -23,10 +23,10 @@ for i = 1:size(pop,2)
 end
 nStableIter = 0;
 i = 0;
-maxIter = 1e6;
+maxIter = 1000; %vorher 1e6
 
 lastCosts = realmax*ones(1,10000);
-while i<maxIter && nStableIter<1e4
+while i<maxIter && nStableIter<500 %vorher 1e4
     i = i + 1;
     ind = randi(100,1,3);
     newPos = pop(:,ind(1)) + 0.85*(pop(:,ind(3))-pop(:,ind(2)));
