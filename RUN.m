@@ -218,19 +218,21 @@ for i=31:31
     predscorecont= vec2mat(score(:,2),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel im Hintergrund liegt.
     
     costFunction = makeCostFunction(pcashape,predscorecont,meanxyzent,@costfunct);
-    optparameters=optimize(costFunction,minimums,maximums);
+    drawPop = makedrawPopulation(pcashape,meanxyzent,@drawPopulation);
+    
+    imshow(testimage)
+    optparameters=optimize(costFunction,minimums,maximums,drawPop);
+    hold off
     
     optparameters(3:4)=optparameters(3:4)+[meanxyzent(1);meanxyzent(2)];
-    
     %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
-
     %LOESCHEN! - Darstellung Optimum
-    bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-    currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
-    imshow(testimage)
-    hold on
-    plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
-    hold off
+    %bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
+    %currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
+    %imshow(testimage)
+    %hold on
+    %plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
+    %hold off
 end
 
 % % (d) Untersuchen Sie die Segmentiergenauigkeit Ihrer Methode (praktisch
