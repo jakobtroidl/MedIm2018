@@ -167,6 +167,22 @@ h.TickLabelInterpreter = 'none';
 
 [rf,pcashape]=train(images,masks,shapes,1); %pcashape enthält PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
 
+% -> predict.m
+
+% LOESCHEN - zur beispielhaften Darstellung (image 31):
+% testimage = cell2mat(handdata.images(31)); %Image 31 auswaehlen (1. Testimage)
+% [label,score,imagefeat]=predictsegmentation(rf,testimage); 
+% predcont = vec2mat(label,imagefeat(7,size(label,1)));
+% predcont = uint8(predcont);
+% predcont(predcont==5)=0;
+% predcont(predcont==10)=255;
+% imshow(predcont)
+% hold on
+% testlandmarks=cell2mat(handdata.landmarks(31));
+% plot([testlandmarks(1,:),testlandmarks(1,1)],[testlandmarks(2,:),testlandmarks(2,1)]);
+% hold off
+
+
 % % (b) Erstellen Sie eine Kostenfunktion, die zu einem Paramtervektor p dem
 % % Klassifikatorergebnis auf einem Testbild einen skalaren Wert liefert, der
 % % umso kleiner wird, je besser das daraus generierte Shape auf das Klassi
@@ -184,8 +200,14 @@ h.TickLabelInterpreter = 'none';
 % % die Matlab-Funktion ga verwendet werden, die einen genetischen Algorithmus
 % % implementiert.
 
-minimums = [-30;0.75;-200;-200];
-maximums = [30;1.25;200;200];
+minimums = [-30;0.75;-150;-150];
+maximums = [30;1.25;150;150];
+
+%Zentrumskoordinaten aller Testbilder berechnen:
+for i=31:50
+zentren(i,:)=size(cell2mat(handdata.images(i)));
+end
+meanxyzent=[mean(zentren(:,1)),mean(zentren(:,2))];
 
 %fuer alle Testbiler (31-50):
 for i=31:31
@@ -193,41 +215,23 @@ for i=31:31
     
     testimage = cell2mat(handdata.images(i)); %Image 31 auswaehlen (1. Testimage)
     [label,score,imagefeat]=predictsegmentation(rf,testimage); 
-    predcont = vec2mat(label,imagefeat(7,size(label,1)));
-    predscorecont= vec2mat(score(:,1),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel Kontur ist
+    predscorecont= vec2mat(score(:,2),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel im Hintergrund liegt.
     
-    %LOESCHEN - Darstellung
-    predcont = uint8(predcont);
-    predcont(predcont==5)=0;
-    predcont(predcont==10)=255;
-    imshow(predcont)
-    hold on
-    testlandmarks=cell2mat(handdata.landmarks(i));
-    plot([testlandmarks(1,:),testlandmarks(1,1)],[testlandmarks(2,:),testlandmarks(2,1)]);
-    hold off
-
-    costFunction = makeCostFunction(pcashape,predscorecont,@costfunct);
+    costFunction = makeCostFunction(pcashape,predscorecont,meanxyzent,@costfunct);
     optparameters=optimize(costFunction,minimums,maximums);
-
+    
+    optparameters(3:4)=optparameters(3:4)+[meanxyzent(1);meanxyzent(2)];
+    
     %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
 
     %LOESCHEN! - Darstellung Optimum
     bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
     currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
-    imshow(image31)
+    imshow(testimage)
     hold on
     plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
     hold off
 end
-
-%mit darstellung.. 
-%optimize(costFunction,minimums,maximums,@drawPopulation);
-function h = drawPopulation(population, bestInd)
-    h(1) = plot(population(1,:),population(2,:),'wx'); hold on
-    h(2) = plot(population(1,:),population(2,:),'b+'); hold on
-    h(3) = plot(population(1,bestInd),population(2,bestInd),'g+');
-end
-
 
 % % (d) Untersuchen Sie die Segmentiergenauigkeit Ihrer Methode (praktisch
 % % hierfur zb boxplot). Interpretieren Sie den Ein
@@ -236,3 +240,6 @@ end
 % % das Konvergenzverhalten etc.
 
 %kontrast des bildes aendern
+
+%pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
+%zentrieren.
