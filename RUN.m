@@ -167,29 +167,13 @@ h.TickLabelInterpreter = 'none';
 
 [rf,pcashape]=train(images,masks,shapes,1); %pcashape enthält PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
 
-% LOESCHEN: (fuer Report)
-image31 = cell2mat(handdata.images(31)); %Image 31 auswaehlen (1. Testimage)
-[label,score,imagefeat]=predictsegmentation(rf,image31); 
-predcont = vec2mat(label,imagefeat(7,size(label,1)));
-predscorecont= vec2mat(score(:,1),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel Kontur ist
-predcont = uint8(predcont);
-predcont(predcont==5)=0;
-predcont(predcont==10)=255;
-imshow(predcont)
-hold on
-landmarks31=cell2mat(handdata.landmarks(31));
-plot([landmarks31(1,:),landmarks31(1,1)],[landmarks31(2,:),landmarks31(2,1)]);
-hold off
-
 % % (b) Erstellen Sie eine Kostenfunktion, die zu einem Paramtervektor p dem
 % % Klassifikatorergebnis auf einem Testbild einen skalaren Wert liefert, der
 % % umso kleiner wird, je besser das daraus generierte Shape auf das Klassi
 % % katorergebnis (denWahrscheinlichkeiten fur den modellierten Knochen)
 % % passt.
 
-%LOESCHEN, fuer image31
-costfunct(pcashape,predscorecont,[0,1,0,0])
-costfunct(pcashape,predscorecont,[0,1,70,160])
+% -> costfunct.m
 
 % % (c) Optimieren Sie diese Funktion fuer jedes der Testbilder. Wir verwenden
 % % dazu eine Methode aus dem Bereich der stochastischen Optimierung,
@@ -200,21 +184,41 @@ costfunct(pcashape,predscorecont,[0,1,70,160])
 % % die Matlab-Funktion ga verwendet werden, die einen genetischen Algorithmus
 % % implementiert.
 
-
-
 minimums = [-30;0.75;-200;-200];
 maximums = [30;1.25;200;200];
-costFunction = makeCostFunction(pcashape,predscorecont,@costfunct);
-optparameters=optimize(costFunction,minimums,maximums);
 
-costfunct(pcashape,predscorecont,optparameters')
+%fuer alle Testbiler (31-50):
+for i=31:31
+    clear testimage label score imagefeat predcont predscorecont testlandmarks
+    
+    testimage = cell2mat(handdata.images(i)); %Image 31 auswaehlen (1. Testimage)
+    [label,score,imagefeat]=predictsegmentation(rf,testimage); 
+    predcont = vec2mat(label,imagefeat(7,size(label,1)));
+    predscorecont= vec2mat(score(:,1),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel Kontur ist
+    
+    %LOESCHEN - Darstellung
+    predcont = uint8(predcont);
+    predcont(predcont==5)=0;
+    predcont(predcont==10)=255;
+    imshow(predcont)
+    hold on
+    testlandmarks=cell2mat(handdata.landmarks(i));
+    plot([testlandmarks(1,:),testlandmarks(1,1)],[testlandmarks(2,:),testlandmarks(2,1)]);
+    hold off
 
-bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
-imshow(image31)
-hold on
-plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
-hold off
+    costFunction = makeCostFunction(pcashape,predscorecont,@costfunct);
+    optparameters=optimize(costFunction,minimums,maximums);
+
+    %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
+
+    %LOESCHEN! - Darstellung Optimum
+    bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
+    currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
+    imshow(image31)
+    hold on
+    plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
+    hold off
+end
 
 %mit darstellung.. 
 %optimize(costFunction,minimums,maximums,@drawPopulation);
@@ -223,7 +227,6 @@ function h = drawPopulation(population, bestInd)
     h(2) = plot(population(1,:),population(2,:),'b+'); hold on
     h(3) = plot(population(1,bestInd),population(2,bestInd),'g+');
 end
-
 
 
 % % (d) Untersuchen Sie die Segmentiergenauigkeit Ihrer Methode (praktisch
