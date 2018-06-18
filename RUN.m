@@ -95,7 +95,7 @@ hold off
 addpath(genpath('providedFunctions'))
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
-imagesccache=cache(@computeFeatures,image1); %FEHLER!!!!!!!! welcher input par???
+imagesccache=computeFeatures(image1); %FEHLER!!!!!!!! welcher input par???
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
@@ -123,14 +123,14 @@ imagesccache=cache(@computeFeatures,image1); %FEHLER!!!!!!!! welcher input par??
 
 images=handdata.images;
 masks=handdata.masks;
-[rf,pcan]=cache(@train,images,masks,shapes,0); %shapes=aligned (=landmarks)
+[rf1,pcan]=cache(@train,images,masks,shapes,0); %shapes=aligned (=landmarks)
 %%%%%%%%%%%%%LOESCHEN!! view(rf.Trees{1},'Mode','graph'); 
 
 % % (b) Untersuchen und Interpretieren Sie den Einfluss der Anzahl von
 % % Trees mittels oobError
 
 figure;
-oobErrorBaggedEnsemble = oobError(rf);
+oobErrorBaggedEnsemble = oobError(rf1);
 plot(oobErrorBaggedEnsemble)
 xlabel 'Number of grown trees';
 ylabel 'Out-of-bag classification error';
@@ -142,7 +142,7 @@ ylabel 'Out-of-bag classification error';
 % % Features mittels plot(rf.OOBPermutedVarDeltaError).
 
 figure;
-bar(rf.OOBPermutedVarDeltaError);
+bar(rf1.OOBPermutedVarDeltaError);
 title('Curvature Test');
 ylabel('Predictor importance estimates');
 xlabel('Predictors');
@@ -151,8 +151,8 @@ h.XTickLabel = ({'Grauwerte','Grad-x','Grad-y','Grad-Staerke','HL Grauw','HL Gra
 h.XTickLabelRotation = 45;
 h.TickLabelInterpreter = 'none';
 
-%--> In diesem Fall ist die x-Koordinate der wichtigste Prädikator, gefolgt
-%von der y-Koordinate, der Gradientenstaerke und dem Grauwert.
+%--> In diesem Fall sind die x- und y-Koordinaten die wichtigsten Prädikatoren, gefolgt
+%von der Gradientenstaerke und dem Grauwert.
 
 
 % % 4. Shape Particle Filters (17 Punkte) Wir formulieren eine Funktion, die
@@ -165,7 +165,7 @@ h.TickLabelInterpreter = 'none';
 % % Klassifikator trainiert und das PCA Shape Modell erstellt, und eine
 % % Funktion predict, die auf den Testbildern mit dem Klassifikator predicted.
 
-[rf,pcashape]=train(images,masks,shapes,1); %pcashape enthält PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
+[rf,pcashape]=cache(@train,images,masks,shapes,1); %pcashape enthält PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
 
 % -> predict.m
 
