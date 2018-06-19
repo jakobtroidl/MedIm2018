@@ -242,6 +242,24 @@ end
 % % das Konvergenzverhalten etc.
 
 %kontrast des bildes aendern
+landmarks = handdata.landmarks;
+j = 1;
+
+for i = 31:50
+    currLandmarks = cell2mat(landmarks(i));
+    currTest = currLandmarks - randi(6);
+    
+    poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:));
+    poly2 = polyshape(currTest(1,:), currTest(2,:));
+    
+    intersection = intersect(poly1, poly2);
+    
+    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1);
+    j= j + 1;
+end
+
+boxplot(values)
+
 
 %pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
 %zentrieren.
