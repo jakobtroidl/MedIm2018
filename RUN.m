@@ -247,18 +247,18 @@ j = 1;
 
 for i = 31:50
     currLandmarks = cell2mat(landmarks(i));
-    currTest = currLandmarks - randi(6);
+    currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
     
-    poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:));
+    poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %create polygon objects
     poly2 = polyshape(currTest(1,:), currTest(2,:));
     
-    intersection = intersect(poly1, poly2);
+    intersection = intersect(poly1, poly2); %calculation of the intersection polygon
     
-    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1);
+    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
     j= j + 1;
 end
 
-boxplot(values)
+boxplot(values) %printing the boxplot
 
 
 %pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
