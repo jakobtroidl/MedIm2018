@@ -95,7 +95,58 @@ hold off
 addpath(genpath('providedFunctions'))
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
-imagesccache=computeFeatures(image1); %FEHLER!!!!!!!! welcher input par???
+imagesccache=computeFeatures(image1);
+
+grayValues = vec2mat(imagesccache(1,:), 143);
+xGradient = vec2mat(imagesccache(2,:), 143);
+yGradient = vec2mat(imagesccache(3,:), 143);
+gradientStrength = vec2mat(imagesccache(4,:), 143);
+haarLike = vec2mat(imagesccache(5,:), 143);
+haarLikeGradStrength = vec2mat(imagesccache(6,:), 143);
+xCoord = vec2mat(imagesccache(7,:), 143);
+yCoord = vec2mat(imagesccache(8,:), 143);
+
+figure;
+imagesc(grayValues);
+axis equal
+title('gray Values');
+
+figure;
+imagesc(xGradient);
+axis equal
+title('x Gradient');
+
+figure;
+imagesc(yGradient);
+axis equal
+title('y Gradient');
+
+figure;
+imagesc(gradientStrength);
+axis equal
+title('gradient Strength');
+
+figure;
+imagesc(haarLike);
+axis equal
+title('haar Like Features');
+
+figure;
+imagesc(haarLikeGradStrength);
+axis equal
+title('Haar features gradienr strength');
+
+figure;
+imagesc(xCoord);
+axis equal
+title('x-Coordinates');
+
+figure;
+imagesc(yCoord);
+axis equal
+title('y-Coordinates');
+
+
 
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
@@ -120,6 +171,7 @@ imagesccache=computeFeatures(image1); %FEHLER!!!!!!!! welcher input par???
 % % % % % % masks1=cell2mat(handdata.masks(1));
 % % % % % % figure();
 % % % % % % imshow(masks1);
+
 
 images=handdata.images;
 masks=handdata.masks;
@@ -244,21 +296,32 @@ end
 %kontrast des bildes aendern
 landmarks = handdata.landmarks;
 j = 1;
-
-for i = 31:50
+predictedShapes = load('optshapes1-12.mat');
+predictedShapes = predictedShapes.optshapes;
+for i = 31:42
     currLandmarks = cell2mat(landmarks(i));
-    currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
+    %currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
+    
     
     poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %create polygon objects
-    poly2 = polyshape(currTest(1,:), currTest(2,:));
+    poly2 = polyshape(predictedShapes(j,:), predictedShapes(j + 1,:));
     
     intersection = intersect(poly1, poly2); %calculation of the intersection polygon
     
-    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
-    j= j + 1;
+    values(:,(j+1)/2) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
+    j= j + 2;
 end
 
 boxplot(values) %printing the boxplot
+
+%ausgabe
+bild=40;
+lm=cell2mat(landmarks(bild));
+pred=predictedShapes(((bild-31)*2+1):((bild-30)*2),:);
+imshow(cell2mat(images(bild)))
+hold on
+plot(lm(1,:),lm(2,:))
+plot(pred(1,:),pred(2,:))
 
 
 %pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
