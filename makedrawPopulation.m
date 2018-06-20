@@ -1,6 +1,6 @@
-function f = makedrawPopulation(pcashape,meanxyzent,drawp)
+function f = makedrawPopulation(pcashape,drawp)
     f = @drawPop;
     function c = drawPop(params,bestInd)
-        c = drawp(pcashape,meanxyzent,params,bestInd);
+        c = drawp(pcashape,params,bestInd);
     end
 end

@@ -1,4 +1,4 @@
-function totalcost = costfunct( pcashape, contscore,meanxyzent,p )
+function totalcost = costfunct( pcashape, contscore,p )
 %Input Variables: pcashape=[shapesmean,shapeseVal,shapeseVec] .. Array der
 %PCA der Trainingsbilder (1-30)
 %p=[r,s,tx,ty].. Parametervektor(r=rotation, s=skalierung, tx=translation
@@ -6,7 +6,7 @@ function totalcost = costfunct( pcashape, contscore,meanxyzent,p )
 %contscore.. Wahrscheinlichkeit das ein Pixel im Hintergrund liegt.
 
 bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',p(1),p(2),p(3)+meanxyzent(1),p(4)+meanxyzent(2));
+currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',p(1),p(2),p(3),p(4));
 
 totalcost=0;
 for i=1:size(currentshape,2) %Schleifenberechnung ueber alle Punkte

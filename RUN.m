@@ -218,35 +218,28 @@ imshow(predcont)
 % % die Matlab-Funktion ga() verwendet werden, die einen genetischen Algorithmus
 % % implementiert.
 
-minimums = [-30;0.75;-150;-150];
-maximums = [30;1.25;150;150];
-
-%Zentrumskoordinaten aller Testbilder berechnen:
-for i=31:50
-zentren(i-30,:)=size(cell2mat(handdata.images(i)))./2;
-end
-meanxyzent=[mean(zentren(:,1)),mean(zentren(:,2))]
-
+minimums = [-30;0.75;-200;-200];
+maximums = [30;1.25;200;200];
 
 %fuer alle Testbiler berechnen (31-50):
-for i=47:50
+for i=50:50
     clear testimage label score imagefeat predcont predscorecont testlandmarks
     
     testimage = cell2mat(handdata.images(i)); %Image 31 auswaehlen (1. Testimage)
     [label,score,imagefeat]=predictsegmentation(rf,testimage); 
     predscorecont= vec2mat(score(:,2),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel im Hintergrund liegt.
     
-    costFunction = makeCostFunction(pcashape,predscorecont,meanxyzent,@costfunct);
-    drawPop = makedrawPopulation(pcashape,meanxyzent,@drawPopulation);
+    costFunction = makeCostFunction(pcashape,predscorecont,@costfunct);
+    drawPop = makedrawPopulation(pcashape,@drawPopulation);
     
     optparameters=optimize(costFunction,minimums,maximums);
     
     %mit Ausgabe:
     %imshow(testimage)
+    %hold on
     %optparameters=optimize(costFunction,minimums,maximums,drawPop);
     %hold off
     
-    optparameters(3:4)=optparameters(3:4)+[meanxyzent(1);meanxyzent(2)];
     %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
     %LOESCHEN! - Darstellung Optimum
     bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
@@ -260,7 +253,7 @@ end
 % %Darstellung der predicted und wahren Shape von image k
 % k=31;
 % bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-% pcalandmarks=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',0,1,-161,-69);
+% pcalandmarks=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',0,1,0,0);
 % truelandmarks= cell2mat(handdata.landmarks(k));
 % predlandmarks= optshapes(((k-31)*2+1):(k-30)*2,:);
 % imshow(uint8(cell2mat(handdata.images(k))))
