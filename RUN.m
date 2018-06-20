@@ -3,7 +3,6 @@
 %_____________________Projekt 2________________________________________
 %_____________________________________________________________________
 
-
 % % 2 Angabe
 % % Im zweiten Beispiel geht es darum, das PCA Model aus dem ersten Beispiel in
 % % einem Segmentierungsalgorithmus zu verwenden. Es handelt sich dabei um eine
@@ -30,7 +29,6 @@
 % % 1-30 sind fur das Training (dh PCA Modell und Klassifikator) und Bilder 31-50
 % % fur das Testen zu verwenden.
 
-
 % % 1. Shape-Modell (5 Punkte) Erweitern Sie Funktion generateShape.m so,
 % % dass die Shapes entsprechend den Paramtern r; s; x; y rotiert, skaliert und
 % % verschoben werden konnen (Stichwort Rotationsmatrix), dh die Funktion
@@ -38,9 +36,6 @@
 % % translation). Plotten Sie analog zum ersten Beispiel Shapes fur mehrere
 % % Werte von Skalierung und Rotation.
 % % 1siehe PDF deBruijne2004MICCAI_ParticleFilters.pdf
-
-
-
 
 handdata = load('handdata.mat');
 shapes = handdata.aligned; %aligned auswaehlen
@@ -51,7 +46,6 @@ for i=1:50
     for j=1:64
         shapesmat(j*2,i)=shapes(j,2,i);
         shapesmat(j*2-1,i)=shapes(j,1,i);
-        
     end
 end
 
@@ -146,37 +140,23 @@ imagesc(yCoord);
 axis equal
 title('y-Coordinates');
 
-
-
 % % 3. Klassifikation & Feature-Selection (11 Punkte) Die Features werden
 % % nun verwendet, um einen Klassifikator zu trainieren, der die Kanten des
 % % zu segmentierenden Objekts klassifizieren soll. Wir verwenden Random Forests
 % % 3, die in Matlab in der Klasse TreeBagger implementiert sind.
-% % (a) Schreiben Sie eine Funktion train(images, masks), die fur jedes Bild
-% % die Features berechnet und dann fur alle Trainingsbilder einen Random
-% % Forest trainiert, mit den Masks als Klassenlabels. Ein Beispielaufruft
+% % (a) Schreiben Sie eine Funktion train(images, masks), die fuer jedes Bild
+% % die Features berechnet und dann fuer alle Trainingsbilder einen Random
+% % Forest trainiert, mit den Masks als Klassenlabels. Ein Beispielaufruf
 % % sieht z.B. so aus:
 % % rf = TreeBagger(32,features',labels','OOBVarImp','on'); Hinweis:
 % % Um das Trainieren zu beschleunigen, verwenden Sie alle Pixel der
-% % Knochenkontur, aber nur ein zufallig auswahltes Subset der Hintergrundpixel
-% % (gleichviele Samples fur Kontur/Hintergrund).
-
-% % % % % % % LOESCHEN!! nur zur Darstellung 
-% % % % % % landmarks1=cell2mat(handdata.landmarks(1));
-% % % % % % figure();
-% % % % % % imshow(image1);
-% % % % % % hold on
-% % % % % % plot([landmarks1(1,:),landmarks1(1,1)],[landmarks1(2,:),landmarks1(2,1)]);
-% % % % % % hold off
-% % % % % % masks1=cell2mat(handdata.masks(1));
-% % % % % % figure();
-% % % % % % imshow(masks1);
-
+% % Knochenkontur, aber nur ein zufaellig ausgewaehltes Subset der Hintergrundpixel
+% % (gleichviele Samples fuer Kontur/Hintergrund).
 
 images=handdata.images;
 masks=handdata.masks;
 [rf1,pcan]=cache(@train,images,masks,shapes,0); %shapes=aligned (=landmarks)
-%%%%%%%%%%%%%LOESCHEN!! view(rf.Trees{1},'Mode','graph'); 
+%view(rf.Trees{1},'Mode','graph'); %Tree anzeigen
 
 % % (b) Untersuchen und Interpretieren Sie den Einfluss der Anzahl von
 % % Trees mittels oobError
@@ -186,9 +166,6 @@ oobErrorBaggedEnsemble = oobError(rf1);
 plot(oobErrorBaggedEnsemble)
 xlabel 'Number of grown trees';
 ylabel 'Out-of-bag classification error';
-
-%--> Der 'out-of-bag error' nimmt mit wachsender Anzahl an Baeumen ab. ->
-%15 wäre schon sehr gut und bezueglich Laufzeit eventuell besser.
 
 % % (c) Untersuchen und Interpretieren Sie die Wichtigkeit der verschiedenen
 % % Features mittels plot(rf.OOBPermutedVarDeltaError).
@@ -203,14 +180,10 @@ h.XTickLabel = ({'Grauwerte','Grad-x','Grad-y','Grad-Staerke','HL Grauw','HL Gra
 h.XTickLabelRotation = 45;
 h.TickLabelInterpreter = 'none';
 
-%--> In diesem Fall sind die x- und y-Koordinaten die wichtigsten Prädikatoren, gefolgt
-%von der Gradientenstaerke und dem Grauwert.
-
-
 % % 4. Shape Particle Filters (17 Punkte) Wir formulieren eine Funktion, die
 % % die Kosten modelliert, ein Shape auf ein Target-Bild zu plotten. D.h. wir suchen
 % % im Parameterraum (Shape-Parameter zzgl Rotation, Skalierung, Translation)
-% % einen Punkt, der ein moglichst gut passendes Shape beschreibt, dh eine
+% % einen Punkt, der ein moeglichst gut passendes Shape beschreibt, dh eine
 % % Segmentierung des Objekts.
 
 % % (a) Erstellen Sie eine Funktion train, die auf den Trainingsbildern den
@@ -221,19 +194,12 @@ h.TickLabelInterpreter = 'none';
 
 % -> predict.m
 
-% LOESCHEN - zur beispielhaften Darstellung (image 31):
-% testimage = cell2mat(handdata.images(31)); %Image 31 auswaehlen (1. Testimage)
-% [label,score,imagefeat]=predictsegmentation(rf,testimage); 
-% predcont = vec2mat(label,imagefeat(7,size(label,1)));
-% predcont = uint8(predcont);
-% predcont(predcont==5)=0;
-% predcont(predcont==10)=255;
-% imshow(predcont)
-% hold on
-% testlandmarks=cell2mat(handdata.landmarks(31));
-% plot([testlandmarks(1,:),testlandmarks(1,1)],[testlandmarks(2,:),testlandmarks(2,1)]);
-% hold off
-
+% Beispielhaften Darstellung (image 31):
+testimage = cell2mat(handdata.images(31)); %Image 31 auswaehlen (1. Testimage)
+[label,score,imagefeat]=predictsegmentation(rf,testimage); 
+predcont = vec2mat(score(:,1),imagefeat(7,size(label,1)));
+predcont = uint8(predcont.*255);
+imshow(predcont)
 
 % % (b) Erstellen Sie eine Kostenfunktion, die zu einem Paramtervektor p dem
 % % Klassifikatorergebnis auf einem Testbild einen skalaren Wert liefert, der
@@ -246,10 +212,10 @@ h.TickLabelInterpreter = 'none';
 % % (c) Optimieren Sie diese Funktion fuer jedes der Testbilder. Wir verwenden
 % % dazu eine Methode aus dem Bereich der stochastischen Optimierung,
 % % genannt Differential Evolution4, die sehr einfach ist, aber robust
-% % und schnell konvergiert. Sie wird in optimize.m zur Verfugung gestellt.
+% % und schnell konvergiert. Sie wird in optimize.m zur Verfuegung gestellt.
 % % Ein komplettes Beispiel zur Erstellung/Verwendung von Kostenfunktion/
-% % Optimierung ndet sich in optimizeDEMO.m. Alternativ kann auch
-% % die Matlab-Funktion ga verwendet werden, die einen genetischen Algorithmus
+% % Optimierung befindet sich in optimizeDEMO.m. Alternativ kann auch
+% % die Matlab-Funktion ga() verwendet werden, die einen genetischen Algorithmus
 % % implementiert.
 
 minimums = [-30;0.75;-150;-150];
@@ -257,12 +223,13 @@ maximums = [30;1.25;150;150];
 
 %Zentrumskoordinaten aller Testbilder berechnen:
 for i=31:50
-zentren(i,:)=size(cell2mat(handdata.images(i)));
+zentren(i-30,:)=size(cell2mat(handdata.images(i)))./2;
 end
-meanxyzent=[mean(zentren(:,1)),mean(zentren(:,2))];
+meanxyzent=[mean(zentren(:,1)),mean(zentren(:,2))]
 
-%fuer alle Testbiler (31-50):
-for i=31:31
+
+%fuer alle Testbiler berechnen (31-50):
+for i=47:50
     clear testimage label score imagefeat predcont predscorecont testlandmarks
     
     testimage = cell2mat(handdata.images(i)); %Image 31 auswaehlen (1. Testimage)
@@ -272,20 +239,37 @@ for i=31:31
     costFunction = makeCostFunction(pcashape,predscorecont,meanxyzent,@costfunct);
     drawPop = makedrawPopulation(pcashape,meanxyzent,@drawPopulation);
     
-    imshow(testimage)
-    optparameters=optimize(costFunction,minimums,maximums,drawPop);
-    hold off
+    optparameters=optimize(costFunction,minimums,maximums);
+    
+    %mit Ausgabe:
+    %imshow(testimage)
+    %optparameters=optimize(costFunction,minimums,maximums,drawPop);
+    %hold off
     
     optparameters(3:4)=optparameters(3:4)+[meanxyzent(1);meanxyzent(2)];
     %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
     %LOESCHEN! - Darstellung Optimum
-    %bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-    %currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
-    %imshow(testimage)
-    %hold on
-    %plot([currentshape(1,:),currentshape(1,1)],[currentshape(2,:),currentshape(2,1)])
-    %hold off
+    bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
+    currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
+    
+    %fuer mehrere:
+    optimum((i-30),1:4)=optparameters(1:4);
+    optshapes((((i-30)*2)-1):((i-30)*2),:)=currentshape;
 end
+
+% %Darstellung der predicted und wahren Shape von image k
+% k=31;
+% bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
+% pcalandmarks=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',0,1,-161,-69);
+% truelandmarks= cell2mat(handdata.landmarks(k));
+% predlandmarks= optshapes(((k-31)*2+1):(k-30)*2,:);
+% imshow(uint8(cell2mat(handdata.images(k))))
+% hold on
+% plot([truelandmarks(1,:),truelandmarks(1,1)],[truelandmarks(2,:),truelandmarks(2,1)])
+% plot([predlandmarks(1,:),predlandmarks(1,1)],[predlandmarks(2,:),predlandmarks(2,1)])
+% plot([pcalandmarks(1,:),pcalandmarks(1,1)],[pcalandmarks(2,:),pcalandmarks(2,1)])
+% legend('TrueShape','PredictedShape','PcaShape')
+% hold off
 
 % % (d) Untersuchen Sie die Segmentiergenauigkeit Ihrer Methode (praktisch
 % % hierfur zb boxplot). Interpretieren Sie den Ein
@@ -296,33 +280,28 @@ end
 %kontrast des bildes aendern
 landmarks = handdata.landmarks;
 j = 1;
-predictedShapes = load('optshapes1-12.mat');
-predictedShapes = predictedShapes.optshapes;
-for i = 31:42
+
+for i = 31:50
     currLandmarks = cell2mat(landmarks(i));
-    %currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
-    
+    currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
     
     poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %create polygon objects
-    poly2 = polyshape(predictedShapes(j,:), predictedShapes(j + 1,:));
+    poly2 = polyshape(currTest(1,:), currTest(2,:));
     
     intersection = intersect(poly1, poly2); %calculation of the intersection polygon
     
-    values(:,(j+1)/2) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
-    j= j + 2;
+    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
+    j= j + 1;
 end
 
 boxplot(values) %printing the boxplot
 
-%ausgabe
-bild=40;
-lm=cell2mat(landmarks(bild));
-pred=predictedShapes(((bild-31)*2+1):((bild-30)*2),:);
-imshow(cell2mat(images(bild)))
-hold on
-plot(lm(1,:),lm(2,:))
-plot(pred(1,:),pred(2,:))
-
-
 %pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
 %zentrieren.
+
+%kontrast des bildes aendern
+
+
+%aktuelle Laufzeiten: 20-30 min
+%laufzeiten geringer.. fehler höher.. boxplot mit beiden vektoren
+%variieren der baumtiefe, min/max, opt-dauer (=häufigkeit)
