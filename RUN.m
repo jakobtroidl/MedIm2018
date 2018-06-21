@@ -315,13 +315,16 @@ end
 boxplot(values) %printing the boxplot
 
 %ausgabe
-bild=40;
+bild=31;
 lm=cell2mat(landmarks(bild));
 pred=predictedShapes(((bild-31)*2+1):((bild-30)*2),:);
 imshow(cell2mat(images(bild)))
 hold on
-plot(lm(1,:),lm(2,:))
-plot(pred(1,:),pred(2,:))
+p1 = polyshape(lm(1,:),lm(2,:));
+p2 = polyshape(pred(1,:),pred(2,:));
+
+plot(p1)
+plot(p2)
 
 
 %pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
