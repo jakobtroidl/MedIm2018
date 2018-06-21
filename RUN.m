@@ -270,16 +270,17 @@ end
 % % des Algorithmus, beschreiben Sie von Ihnen untersuchte Varianten,
 % % das Konvergenzverhalten etc.
 
-%kontrast des bildes aendern
+%Evaluierung der Segmentierungsgenauigkeit
 landmarks = handdata.landmarks;
+optshapes = load('optshapes.mat', 'optshapes');
+optshapes = optshapes.optshapes;
 j = 1;
 
-for i = 31:50
+for i = 31:50 %iteriere über alle klassifizierten shapes
     currLandmarks = cell2mat(landmarks(i));
-    currTest = currLandmarks - randi(6); %just for test cases --> can be replaced with real segmentation results
     
     poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %create polygon objects
-    poly2 = polyshape(currTest(1,:), currTest(2,:));
+    poly2 = polyshape(optshapes(2 * (j-1) + 1,:), optshapes(2*(j-1) + 2,:));
     
     intersection = intersect(poly1, poly2); %calculation of the intersection polygon
     
@@ -287,27 +288,16 @@ for i = 31:50
     j= j + 1;
 end
 
-boxplot(values) %printing the boxplot
-
-%ausgabe
-bild=31;
-lm=cell2mat(landmarks(bild));
-pred=predictedShapes(((bild-31)*2+1):((bild-30)*2),:);
-imshow(cell2mat(images(bild)))
-hold on
-p1 = polyshape(lm(1,:),lm(2,:));
-p2 = polyshape(pred(1,:),pred(2,:));
-
-plot(p1)
-plot(p2)
+boxplot(values, {'Optimierter Algorithmus'}) %printing the boxplot
 
 
-%pca-figure vorab auf durchschnittliche mean-koordinate der 20 testbilder
-%zentrieren.
+%Vergleich des langsamen aber genauen Algorithmus mit dem Algorithmus, der in der
+%Laufzeit verbessert wurde (siehe 4d im Bericht)
+%Werte wurden vorher berechnet und im Workspace abgespeichert
+short = load('segQualityShort.mat');
+short = short.shortValues;
 
-%kontrast des bildes aendern
+opt = load('segQualityOpt.mat');
+opt = opt.optValues;
 
-
-%aktuelle Laufzeiten: 20-30 min
-%laufzeiten geringer.. fehler hï¿½her.. boxplot mit beiden vektoren
-%variieren der baumtiefe, min/max, opt-dauer (=hï¿½ufigkeit)
+boxplot([opt; short]', {'32', '10'});
