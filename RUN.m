@@ -52,7 +52,8 @@ end
 shapesmean=mean(shapesmat'); %mean aller Punkte
 shapesmatwom=shapesmat-shapesmean'; %shapes without mean
 [shapeseVal,shapeseVec]=pca(shapesmatwom,1); %pca berechnen
- 
+
+%verschiedene paramter zum generieren der shapes ausprobieren:
 bnew=ones(10,1);
 sampleshape1=generateShape(bnew,shapeseVec,shapesmean,0,1,0,0);
 sampleshape2=generateShape(bnew,shapeseVec,shapesmean,90,1,0,0);
@@ -60,6 +61,7 @@ sampleshape3=generateShape(bnew,shapeseVec,shapesmean,90,0.5,50,0);
 sampleshape4=generateShape(bnew,shapeseVec,shapesmean,90,1,50,100);
 sampleshape5=generateShape(bnew,shapeseVec,shapesmean,60,2,0,0);
 
+%plotten der generierten shapes:
 figure();
 hold on
 plot([sampleshape1(1,:),sampleshape1(1,1)],[sampleshape1(2,:),sampleshape1(2,1)])
@@ -86,11 +88,12 @@ hold off
 % % kann sie einfach mit cache gecacht werden. Gerne konnen auch weitere Features
 % % berechnet und evaluiert werden.
 
-addpath(genpath('providedFunctions'))
+addpath(genpath('providedFunctions'))%um auf die Funktionen des 'providedFunctions' Ordner direkt zuzugreifen zu können
 
 image1 = cell2mat(handdata.images(1)); %Image 1 auswaehlen
-imagesccache=computeFeatures(image1);
+imagesccache=computeFeatures(image1); %Features von Image 1 berechnen
 
+%Features Zeilenvektoren in Matrix umschreiben und darstellen.
 grayValues = vec2mat(imagesccache(1,:), 143);
 xGradient = vec2mat(imagesccache(2,:), 143);
 yGradient = vec2mat(imagesccache(3,:), 143);
@@ -190,13 +193,13 @@ h.TickLabelInterpreter = 'none';
 % % Klassifikator trainiert und das PCA Shape Modell erstellt, und eine
 % % Funktion predict, die auf den Testbildern mit dem Klassifikator predicted.
 
-[rf,pcashape]=cache(@train,images,masks,shapes,1); %pcashape enthï¿½lt PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
+[rf,pcashape]=cache(@train,images,masks,shapes,1); %pcashape enthält PCA der 30 Trainingsbilder (pcashape=[shapesmean,shapeseVal,shapeseVec])
 
 % -> predict.m
 
-% Beispielhaften Darstellung (image 31):
+% Beispielhafte Darstellung (image 31):
 testimage = cell2mat(handdata.images(31)); %Image 31 auswaehlen (1. Testimage)
-[label,score,imagefeat]=predictsegmentation(rf,testimage);
+[label,score,imagefeat]=predictsegmentation(rf,testimage); 
 predcont = vec2mat(score(:,1),imagefeat(7,size(label,1)));
 predcont = uint8(predcont.*255);
 imshow(predcont)
@@ -222,16 +225,17 @@ minimums = [-30;0.75;-200;-200];
 maximums = [30;1.25;200;200];
 
 %fuer alle Testbiler berechnen (31-50):
-for i=50:50
+for i=31:50
     clear testimage label score imagefeat predcont predscorecont testlandmarks
-    
-    testimage = cell2mat(handdata.images(i)); %Image 31 auswaehlen (1. Testimage)
+    tic
+    testimage = cell2mat(handdata.images(i)); %Testimage auswaehlen
     [label,score,imagefeat]=predictsegmentation(rf,testimage); 
     predscorecont= vec2mat(score(:,2),imagefeat(7,size(label,1))); %Wahrscheinlichkeit, dass ein Pixel im Hintergrund liegt.
     
     costFunction = makeCostFunction(pcashape,predscorecont,@costfunct);
     drawPop = makedrawPopulation(pcashape,@drawPopulation);
     
+    %ohne Ausgabe:
     optparameters=optimize(costFunction,minimums,maximums);
     
     %mit Ausgabe:
@@ -239,30 +243,30 @@ for i=50:50
     %hold on
     %optparameters=optimize(costFunction,minimums,maximums,drawPop);
     %hold off
-
-    %LOESCHEN! costfunct(pcashape,predscorecont,optparameters')
-    %LOESCHEN! - Darstellung Optimum
+    
     bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
     currentshape=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',optparameters(1),optparameters(2),optparameters(3),optparameters(4));
-
-    %fuer mehrere:
-    optimum((i-30),1:4)=optparameters(1:4);
-    optshapes((((i-30)*2)-1):((i-30)*2),:)=currentshape;
+    
+    %Speichern der Optima:
+    optimum((i-30),1:4)=optparameters(1:4); %Optimumparameter
+    optshapes((((i-30)*2)-1):((i-30)*2),:)=currentshape; %Optimumshapes
+    opttime((i-30))=toc; %Berechnungszeit des Optimums
 end
 
-% %Darstellung der predicted und wahren Shape von image k
-% k=31;
-% bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
-% pcalandmarks=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',0,1,0,0);
-% truelandmarks= cell2mat(handdata.landmarks(k));
-% predlandmarks= optshapes(((k-31)*2+1):(k-30)*2,:);
-% imshow(uint8(cell2mat(handdata.images(k))))
-% hold on
-% plot([truelandmarks(1,:),truelandmarks(1,1)],[truelandmarks(2,:),truelandmarks(2,1)])
-% plot([predlandmarks(1,:),predlandmarks(1,1)],[predlandmarks(2,:),predlandmarks(2,1)])
-% plot([pcalandmarks(1,:),pcalandmarks(1,1)],[pcalandmarks(2,:),pcalandmarks(2,1)])
-% legend('TrueShape','PredictedShape','PcaShape')
-% hold off
+% %Darstellung der predicted und wahren Shape von image k (in unserem
+% Report fuer k=31,37)
+k=31;
+bnew=ones(sum((pcashape(:,2)/sum(pcashape(:,2)))>0.001),1); %nur jene Modes verwenden die mindest 0.1% der Gesamtvarianz beitragen.
+pcalandmarks=generateShape(bnew,pcashape(:,3:end),pcashape(:,1)',0,1,0,0);
+truelandmarks= cell2mat(handdata.landmarks(k));
+predlandmarks= optshapes(((k-31)*2+1):(k-30)*2,:);
+imshow(uint8(cell2mat(handdata.images(k))))
+hold on
+plot([truelandmarks(1,:),truelandmarks(1,1)],[truelandmarks(2,:),truelandmarks(2,1)])
+plot([predlandmarks(1,:),predlandmarks(1,1)],[predlandmarks(2,:),predlandmarks(2,1)])
+plot([pcalandmarks(1,:),pcalandmarks(1,1)],[pcalandmarks(2,:),pcalandmarks(2,1)])
+legend('TrueShape','PredictedShape','PcaShape')
+hold off
 
 % % (d) Untersuchen Sie die Segmentiergenauigkeit Ihrer Methode (praktisch
 % % hierfur zb boxplot). Interpretieren Sie den Ein
@@ -276,19 +280,19 @@ optshapes = load('optshapes.mat', 'optshapes');
 optshapes = optshapes.optshapes;
 j = 1;
 
-for i = 31:50 %iteriere über alle klassifizierten shapes
+for i = 31:50 %iteriere über alle Testshapes
     currLandmarks = cell2mat(landmarks(i));
     
-    poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %create polygon objects
-    poly2 = polyshape(optshapes(2 * (j-1) + 1,:), optshapes(2*(j-1) + 2,:));
+    poly1 = polyshape(currLandmarks(1,:), currLandmarks(2,:)); %erstelle ein Polygon mit den "wahren" Shape-Landmarks
+    poly2 = polyshape(optshapes(2 * (j-1) + 1,:), optshapes(2*(j-1) + 2,:)); %erstelle ein Polygon mit den predicted Shape-Landmarks
     
-    intersection = intersect(poly1, poly2); %calculation of the intersection polygon
+    intersection = intersect(poly1, poly2); %berechne das Durchschnittspolygon von poly1 und poly2
     
-    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Forumla from the slides
+    values(:,j) = (area(poly1) + area(poly2) - 2 * area(intersection)) / area(poly1); %Validierungsformel aus der Vorlesung
     j= j + 1;
 end
 
-boxplot(values, {'Optimierter Algorithmus'}) %printing the boxplot
+boxplot(values, {'Optimierter Algorithmus'}) %Validierungswerte sämtlicher Testimages in Boxplot darstellen.
 
 
 %Vergleich des langsamen aber genauen Algorithmus mit dem Algorithmus, der in der
